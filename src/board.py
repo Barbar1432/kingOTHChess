@@ -28,7 +28,8 @@ class board :
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
 
-
+        #test
+        #test
 
 
     def draw(self):
