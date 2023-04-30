@@ -34,3 +34,18 @@ class board :
     def draw(self):
         self.draw_board()
         pygame.display.flip()
+
+    def move(self,sqSelected,sqDest):
+        row, col = sqSelected
+        piece = self.board[row][col]
+        self.board[row][col] = " "
+        row, col = sqDest
+        self.board[row][col] = piece
+
+
+
+
+
+
+
+
