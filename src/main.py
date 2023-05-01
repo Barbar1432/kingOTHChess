@@ -1,8 +1,7 @@
 import pygame
 from board import board
 
-#git branch push deneme
-
+# git branch deneme #5
 # This is a sample Python script.
 
 # Press ⌃R to execute it or replace it with your code.
