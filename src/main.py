@@ -1,7 +1,7 @@
 import pygame
 from board import board
 
-#branch deneme
+#branch deneme yetkin
 
 # This is a sample Python script.
 
