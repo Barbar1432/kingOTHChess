@@ -1,8 +1,13 @@
 import pygame
 class piece :
     def __init__(self,color,type):
-     self.color =color
-     self.type=type
+        self.color =color
+        self.type=type
+        self.position = 0,0
+        self.possible_moves_list = []
+
+
+
 
 
 class Pawn(piece):
@@ -35,6 +40,19 @@ class Rook(piece):
     def __init__(self, color,name):
         super().__init__(color,'rook')
         self.name=name
+
+
+
+def possible_moves(self, board):
+    for row in range(len(board)):
+        for column in range(len(board[0])):
+            if (board[row][column] == None):
+                free = row, column
+                self.possible_moves_list.append(free)
+
+
+
+
 
 
 

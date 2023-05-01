@@ -15,6 +15,7 @@ if __name__ == '__main__':
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
  board = board()
+board.positions()
 pygame.init()
 pygame.display.set_caption("King of the Hill")
 clock = pygame.time.Clock()
