@@ -33,8 +33,7 @@ class board :
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
 
-        #test
-        #test
+
 
 
     def draw(self):
@@ -42,11 +41,24 @@ class board :
         pygame.display.flip()
 
     def move(self,sqSelected,sqDest):
+
+
         row, col = sqSelected
+        row_move, col_move = sqDest
         piece = self.board[row][col]
+        #piece.possible_moves()
+        #if sqDest in piece.possible_moves_list:     TEKRAR BAKILACAK
         self.board[row][col] = None
-        row, col = sqDest
-        self.board[row][col] = piece
+        self.board[row_move][col_move] = piece
+
+    def positions(self):
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                if (self.board[row][column] != None):
+                    self.board[row][column].position = row,column
+
+
+
 
 
 
