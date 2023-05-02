@@ -19,7 +19,7 @@ class board :
          self.screen_size = (self.square_size * 8, self.square_size * 8)
          self.screen = pygame.display.set_mode(self.screen_size)
 
-    def draw_board(self):
+    def draw_board(self, booly, pos, name):
          colors = [(255, 206, 158), (209, 139, 71)]
 
          for row in range(8):
@@ -32,13 +32,11 @@ class board :
                      piece_image = pygame.image.load('images/'+ self.board[row][col].name +'.png')
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
-
-        #test
-        #test
-
-
-    def draw(self):
-        self.draw_board()
+         if booly:
+             clicked_image = pygame.image.load('images/'+ name +'.png')
+             self.screen.blit(clicked_image,(pos[1]-30,pos[0]-30))
+    def draw(self, booly, pos, name):
+        self.draw_board(booly, pos, name)
         pygame.display.flip()
 
     def move(self,sqSelected,sqDest):

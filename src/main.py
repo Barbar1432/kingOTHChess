@@ -19,22 +19,23 @@ clock = pygame.time.Clock()
 running = True
 sqSelected=()
 sec=[]
-clicked_Piece_Image = None  # Clicked Piece
-clicked_Piece_Bool = False
-
+draggedPieceCoordinates = ()  # Clicked Piece
+clicked = False
+clickedName = None
 while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Left Click is pushed
             # print("Clicked")
             mouse_pos = pygame.mouse.get_pos()
             row, col = mouse_pos
+            draggedPieceCoordinates = (col, row)
             row = row//board.square_size
             col = col//board.square_size
             if len(sec) == 0 and board.board[col][row] is not None:  # If the clicked tile is not empty:
                 sqSelected = (col, row)
                 sec.append(sqSelected)
-                clicked_Piece_Bool = True
-                clicked_Piece_Image = pygame.image.load('images/' + board.board[col][row].name + '.png').convert_alpha()
+                clicked = True
+                clickedName = board.board[col][row].name
         if event.type == pygame.MOUSEBUTTONUP and len(sec) == 1:
             # print("Stopped Clicking")
             # len(sec) == 1 : If a piece was not already clicked, do nothing
@@ -43,22 +44,17 @@ while running:
             dest_col = col//board.square_size
             sqSelected = (dest_col, dest_row)
             sec.append(sqSelected)
-            clicked_Piece_Bool = False
-            clicked_Piece_Image = None
+            clicked = False
         if len(sec) == 2:
             board.move(sec[0], sec[1])
-            board.draw()
+            board.draw(clicked, draggedPieceCoordinates, clickedName)
             sec = []
         if event.type == pygame.QUIT:
             running = False
-    if clicked_Piece_Bool:
-        pos = pygame.mouse.get_pos()
-        board.screen.blit(clicked_Piece_Image,(pos[0],pos[1]))
-        pygame.display.flip()
-    board.draw()
-
-
-
+    row, col = pygame.mouse.get_pos()
+    draggedPieceCoordinates = (col, row)
+    board.draw(clicked, draggedPieceCoordinates, clickedName)
+    pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
