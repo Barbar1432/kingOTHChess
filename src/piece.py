@@ -1,4 +1,5 @@
 import pygame
+
 class piece :
     def __init__(self,color,type):
         self.color =color
@@ -49,10 +50,5 @@ def possible_moves(self, board):
             if (board[row][column] == None):
                 free = row, column
                 self.possible_moves_list.append(free)
-
-
-
-
-
 
 
