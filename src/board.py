@@ -60,7 +60,7 @@ class board :
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 if (self.board[row][column] != None):
-                    self.board[row][column].position = row,column
+                    self.board[row][column].position = (row,column)
 
 
 
