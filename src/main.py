@@ -23,6 +23,7 @@ sec=[]
 draggedPieceCoordinates = ()  # Clicked Piece
 clicked = False
 clickedName = None
+clickedPos = ()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Left Click is pushed
@@ -37,6 +38,7 @@ while running:
                 sec.append(sqSelected)
                 clicked = True
                 clickedName = board.board[col][row].name
+                clickedPos = (col, row)
         if event.type == pygame.MOUSEBUTTONUP and len(sec) == 1:
             # print("Stopped Clicking")
             # len(sec) == 1 : If a piece was not already clicked, do nothing
@@ -48,13 +50,14 @@ while running:
             clicked = False
         if len(sec) == 2:
             board.move(sec[0], sec[1])
-            board.draw(clicked, draggedPieceCoordinates, clickedName)
+            board.draw(clicked, draggedPieceCoordinates, clickedName, clickedPos)
             sec = []
+            clickedPos = ()
         if event.type == pygame.QUIT:
             running = False
     row, col = pygame.mouse.get_pos()
     draggedPieceCoordinates = (col, row)
-    board.draw(clicked, draggedPieceCoordinates, clickedName)
+    board.draw(clicked, draggedPieceCoordinates, clickedName, clickedPos)
     pygame.display.flip()
     clock.tick(60)
 

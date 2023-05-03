@@ -19,7 +19,7 @@ class board :
          self.screen_size = (self.square_size * 8, self.square_size * 8)
          self.screen = pygame.display.set_mode(self.screen_size)
 
-    def draw_board(self, booly, pos, name):
+    def draw_board(self, booly, pos, name, clickedpos):
          colors = [(255, 206, 158), (209, 139, 71)]
 
          for row in range(8):
@@ -28,18 +28,26 @@ class board :
                  color = colors[(row + col) % 2]
                  rect = pygame.Rect(col * self.square_size, row * self.square_size, self.square_size, self.square_size)
                  pygame.draw.rect(self.screen, color, rect)
-                 if self.board[row][col] != None:
-                     piece_image = pygame.image.load('images/'+ self.board[row][col].name +'.png')
+                 if self.board[row][col] != None:  # Print the piece on the board
+                     piece_image = pygame.image.load('images/' + self.board[row][col].name + '.png')
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
-         if booly:
-             clicked_image = pygame.image.load('images/'+ name +'.png')
-             self.screen.blit(clicked_image,(pos[1]-30,pos[0]-30))
-    def draw(self, booly, pos, name):
-        self.draw_board(booly, pos, name)
+
+         if booly: # Drag and drop booly
+
+             clicked_image = pygame.image.load('images/' + name + '.png')
+             (row,col) = clickedpos
+             transparent_screen = pygame.Surface((self.square_size, self.square_size))
+             transparent_screen.set_alpha(120)
+             transparent_screen.fill((144, 238, 144))
+            # Clicked tile lit green
+             self.screen.blit(transparent_screen, (col * self.square_size, row * self.square_size))
+             self.screen.blit(clicked_image, (pos[1]-30, pos[0]-30))
+    def draw(self, booly, pos, name, clickedpos):
+        self.draw_board(booly, pos, name, clickedpos)
         pygame.display.flip()
 
-    def move(self,sqSelected,sqDest):
+    def move(self, sqSelected, sqDest):
         row, col = sqSelected
         piece = self.board[row][col]
         self.board[row][col] = None
