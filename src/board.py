@@ -68,8 +68,19 @@ class board :
                 if self.board[row][column] == king:
                     return (row, column)
 
-    def is_king_threatened(self):
-        kingPos= self.get_Kingsposition(self,King)
+    def is_king_threatened(self,start_pos,dest_pos,king):
+
+        kingPos= self.get_Kingsposition(self,king)
+        self.move(start_pos,dest_pos)
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                if king.color == self.board[row][column].color:
+                    continue
+                if  king in self.board[row][column].possible_moves_list:
+                    self.move(self, dest_pos, start_pos) #undo
+                    return True
+        self.move(self, dest_pos, start_pos)  # undo
+        return False
 
 
 
@@ -84,7 +95,8 @@ class board :
             return False
         if start.possible_moves_list.__contains__(dest_pos) and dest.color==start.color:
             return False
-        # if  iskingthreatened : returned false 
+        if   self.is_king_threatened(): #if the move results in a check position for the playing side is ilegal
+            return False
         else :
             return True
 
