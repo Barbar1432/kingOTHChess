@@ -62,5 +62,32 @@ class board :
                 if (self.board[row][column] != None):
                     self.board[row][column].position = (row,column)
 
+    def get_Kingsposition(self, king):
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                if self.board[row][column] == king:
+                    return (row, column)
+
+    def is_king_threatened(self):
+        kingPos= self.get_Kingsposition(self,King)
+
+
+
+    def isLegal(self, start_pos, dest_pos):
+        start_row, start_col = start_pos
+        dest_row, dest_col = dest_pos
+        start= self.board[start_row][start_col] # start is a piece
+        dest = self.board[dest_row][dest_col] # dest can either be a square (None) or a piece
+        if start is None : # look if there actually is a piece on the start square
+            return False
+        if not start.possible_moves_list.__contains__(dest_pos) : # look if the destination is a possible move for the piece
+            return False
+        if start.possible_moves_list.__contains__(dest_pos) and dest.color==start.color:
+            return False
+        # if  iskingthreatened : returned false 
+        else :
+            return True
+
+
 
 
