@@ -89,20 +89,135 @@ def possible_moves(self, board):
 
 
     elif(self == Bishop):
-        True
+        moves_of_Bishop=[]
+        (row, column) = self.position
+
+
 
 
     elif(self == Knight):
-        True
+        moves_of_Knight = []
+        (row, column) = self.position
+
+        try:
+            moves_of_Knight.append((row-2, column+1))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row-1, column+2))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row+1, column+2))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row+2, column+1))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row-2, column-1))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row-1, column-2))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row+2, column-1))
+        except IndexError:
+            pass
+
+        try:
+            moves_of_Knight.append((row+1, column-2))
+        except IndexError:
+            pass
+
+
 
     elif (self == King):
+        moves_of_King = []
+        (row, column) = self.position
+        try:
+            moves_of_King.append((row+1, column))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row-1, column))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row, column-1))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row, column+1))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row-1, column+1))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row+1, column-1))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row + 1, column + 1))
+        except IndexError:
+            pass
+        try:
+            moves_of_King.append((row - 1, column - 1))
+        except IndexError:
+            pass
+
+
+
         True
 
     elif (self ==  Queen):
         True
 
     else: #Rook
-        return True
+        moves_of_Rook = []
+        (row, column) = self.position
+
+        while (board[row][column+1]==None and column+1 < len(board[0])): #RIGHT
+            column+=1
+            moves_of_Rook.append((row,column))
+
+
+
+        (row, column) = self.position
+
+        while (board[row+1][column] == None and column + 1 < len(board)): #DOWN
+            row+=1
+            moves_of_Rook.append((row, column))
+
+        (row, column) = self.position
+
+        while (board[row-1][column] == None and row -1 > 0):
+            row -= 1
+            moves_of_Rook.append((row, column))
+
+        (row, column) = self.position
+
+        while (board[row][column - 1] == None and column - 1 > 0):  # RIGHT
+            column -= 1
+            moves_of_Rook.append((row, column))
+
+        (row, column) = self.position
+
+
+
+
+
 
 
 
