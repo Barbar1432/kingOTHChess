@@ -1,7 +1,7 @@
 
 import pygame
 from board import board
-
+from visuals import drag_n_drop_visual
 # This is a sample Python script.
 
 # Press ⌃R to execute it or replace it with your code.
@@ -18,46 +18,21 @@ pygame.init()
 pygame.display.set_caption("King of the Hill")
 clock = pygame.time.Clock()
 running = True
-sqSelected=()
-sec=[]
-draggedPieceCoordinates = ()  # Clicked Piece
-clicked = False
-clickedName = None
-clickedPos = ()
+visuals = drag_n_drop_visual()
+event_type = 0
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Left Click is pushed
-            # print("Clicked")
-            mouse_pos = pygame.mouse.get_pos()
-            row, col = mouse_pos
-            draggedPieceCoordinates = (col, row)
-            row = row//board.square_size
-            col = col//board.square_size
-            if len(sec) == 0 and board.board[col][row] is not None:  # If the clicked tile is not empty:
-                sqSelected = (col, row)
-                sec.append(sqSelected)
-                clicked = True
-                clickedName = board.board[col][row].name
-                clickedPos = (col, row)
-        if event.type == pygame.MOUSEBUTTONUP and len(sec) == 1:
-            # print("Stopped Clicking")
-            # len(sec) == 1 : If a piece was not already clicked, do nothing
-            row, col = pygame.mouse.get_pos()
-            dest_row = row//board.square_size
-            dest_col = col//board.square_size
-            sqSelected = (dest_col, dest_row)
-            sec.append(sqSelected)
-            clicked = False
-        if len(sec) == 2:
-            board.move(sec[0], sec[1])
-            board.draw(clicked, draggedPieceCoordinates, clickedName, clickedPos)
-            sec = []
-            clickedPos = ()
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and len(visuals.sec) == 0: # Left Click is pushed
+            event_type = 1
+            visuals.visualize(event_type, board)
+            event_type = 0
+        if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
+            event_type = -1
+            visuals.visualize(event_type, board)
+            event_type = 0
         if event.type == pygame.QUIT:
             running = False
-    row, col = pygame.mouse.get_pos()
-    draggedPieceCoordinates = (col, row)
-    board.draw(clicked, draggedPieceCoordinates, clickedName, clickedPos)
+    visuals.visualize(event_type, board)
     pygame.display.flip()
     clock.tick(60)
 
