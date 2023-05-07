@@ -18,6 +18,8 @@ class board :
          self.square_size = 64
          self.screen_size = (self.square_size * 8, self.square_size * 8)
          self.screen = pygame.display.set_mode(self.screen_size)
+         self.dislocation_count_row = 100  # Dikey
+         self.dislocation_count_col = 128  # Yatay
 
     def draw_board(self, booly, pos, name, clickedpos):
          colors = [(255, 206, 158), (209, 139, 71)]
@@ -26,7 +28,7 @@ class board :
              for col in range(8):
 
                  color = colors[(row + col) % 2]
-                 rect = pygame.Rect(col * self.square_size, row * self.square_size, self.square_size, self.square_size)
+                 rect = pygame.Rect(col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row, self.square_size, self.square_size)
                  pygame.draw.rect(self.screen, color, rect)
                  if self.board[row][col] != None:  # Print the piece on the board
                      piece_image = pygame.image.load('images/' + self.board[row][col].name + '.png')
@@ -41,8 +43,8 @@ class board :
              transparent_screen.set_alpha(120)
              transparent_screen.fill((144, 238, 144))
             # Clicked tile lit green
-             self.screen.blit(transparent_screen, (col * self.square_size, row * self.square_size))
-             self.screen.blit(clicked_image, (pos[1]-30, pos[0]-30))
+             self.screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
+             self.screen.blit(clicked_image, (pos[1]-30 + self.dislocation_count_col, pos[0]-30 + self.dislocation_count_row))
     def draw(self, booly, pos, name, clickedpos):
         self.draw_board(booly, pos, name, clickedpos)
         pygame.display.flip()
