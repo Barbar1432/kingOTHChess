@@ -1,5 +1,16 @@
 import pygame
 from board import board
+def get_color(color):
+    if color == "background":
+        return (241, 222, 201)
+    elif color == "outline1":
+        return (141, 123, 104)
+    elif color == "outline2":
+        return (164, 144, 124)
+    elif color == "text":
+        return (121, 102, 81)
+    else:
+        return
 class drag_n_drop_visual:
     def __init__(self):
         self.sec = []
@@ -41,19 +52,81 @@ class drag_n_drop_visual:
         col, row = pygame.mouse.get_pos()
         self.dragged = (row - b_board.dislocation_count_row, col - b_board.dislocation_count_col)
         b_board.draw(self.clicked, self.dragged, self.clickedName, self.clickedPos)
+
+
 def background(screen, b_board):
-    background_color = (241, 222, 201)
-    outline_color = (141, 123, 104)
-    outline_color2 = (164, 144, 124)
-    screen.fill(background_color)
-    pygame.draw.rect(screen, outline_color,
-                     pygame.Rect(b_board.dislocation_count_col - 20,
-                                 b_board.dislocation_count_row - 20,
-                                 552, 552))
-    pygame.draw.rect(screen, outline_color2,
-                     pygame.Rect(b_board.dislocation_count_col - 10,
-                                 b_board.dislocation_count_row - 10,
-                                 532, 532))
+    dist_between = 3
+    dislocator = 3
+    font = pygame.font.SysFont("fonts/PokemonGB.ttf", 25)
+    screen.fill(get_color("background"))
+    # ------ Main Board Frame ------- #
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col - 30,
+                                 b_board.dislocation_count_row - 30,
+                                 572, 572))
+    pygame.draw.rect(screen, get_color("outline2"),
+                     pygame.Rect(b_board.dislocation_count_col - 15,
+                                 b_board.dislocation_count_row - 15,
+                                 542, 542))
+    # ------ Timer Frame Black ------- #
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col, b_board.dislocation_count_row - 70 , 512, 50))
+    pygame.draw.rect(screen, get_color("outline2"),
+                     pygame.Rect(b_board.dislocation_count_col + 15 , b_board.dislocation_count_row - 55, 512 - 30, 35))
+    # ------ Timer Frame White ------- #
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col, b_board.dislocation_count_row + b_board.square_size * 8 + 20,
+                                 512, 50))
+    pygame.draw.rect(screen, get_color("outline2"),
+                     pygame.Rect(b_board.dislocation_count_col + 15, b_board.dislocation_count_row + b_board.square_size * 8 + 20,
+                                 512 - 30, 35))
+
+    # Print a - b - c
+    abc_surface = font.render("a           b           c           d           "
+                              "e           f           g           h", False, get_color("text"))
+    screen.blit(abc_surface, (b_board.dislocation_count_col + dist_between, b_board.dislocation_count_row + b_board.square_size * 8))
+
+    # Print 1 - 2 - 3 --> Lack of '\n' printing with for loop
+    for i in range(8,0,-1):
+        number = i
+        number_surface = font.render(str(number), False, get_color("text"))
+        screen.blit(number_surface, (b_board.dislocation_count_col + b_board.square_size * 8 + dislocator,
+                                     b_board.dislocation_count_row + dist_between + (8-i) * b_board.square_size))
 
 
+def timer_black(screen, timer_b):
+    font = pygame.font.Font("fonts/PublicPixel.ttf", 15)
+    # milliseconds = timer.time % 60
+    seconds = (int(timer_b.time / 60)) % 60
+    minutes = int(timer_b.time / 3600)
+    if timer_b.turn:
+        # Light this when turn == player
+        pygame.draw.rect(screen, get_color("background"),
+                         pygame.Rect(128 + 15,
+                                     100 - 55,
+                                     512 - 30, 35))
+    text_surface = font.render("Player Black  ", False, get_color("text"))
+    screen.blit(text_surface, (155, 55))
+    timer_surface = font.render(f"00:{minutes:02}:{seconds:02}", False, get_color("text"))
+    screen.blit(timer_surface, (355, 55))
 
+
+def timer_white(screen, timer_w):
+    font = pygame.font.Font("fonts/PublicPixel.ttf", 15)
+    # milliseconds = timer.time % 60
+    seconds = (int(timer_w.time / 60)) % 60
+    minutes = int(timer_w.time / 3600)
+    if timer_w.turn:
+        # Light this when turn == player
+        pygame.draw.rect(screen, get_color("background"),
+                         pygame.Rect(128 + 15,
+                                     100 + 64 * 8 + 20,
+                                     512 - 30, 35))
+    text_surface = font.render("Player White  ", False, get_color("text"))
+    screen.blit(text_surface, (155, 128 + 64 * 8))
+    timer_surface = font.render(f"00:{minutes:02}:{seconds:02}", False, get_color("text"))
+    screen.blit(timer_surface, (355, 128 + 64 * 8))
+class timer:
+    def __init__(self):
+        self.time = 72000  # 20 Minutes
+        self.turn = True

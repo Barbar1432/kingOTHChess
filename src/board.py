@@ -1,4 +1,5 @@
 import pygame
+import pygame.gfxdraw
 from piece import piece
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
 class board :
@@ -34,7 +35,24 @@ class board :
                      piece_image = pygame.image.load('images/' + self.board[row][col].name + '.png')
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
-
+         #DRAW THE HILL SHADOW
+         trans_color = (129, 133, 137, 50)
+         #UP
+         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+                                                     3 * self.square_size - 10 + self.dislocation_count_row,
+                                                     2 * self.square_size + 20, 10), trans_color)
+         #DOWN
+         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+                                                     5 * self.square_size + self.dislocation_count_row,
+                                                     2 * self.square_size + 20, 10), trans_color)
+         #LEFT
+         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+                                                     3 * self.square_size + self.dislocation_count_row,
+                                                     10, 2 * self.square_size), trans_color)
+         #RIGHT
+         pygame.gfxdraw.box(self.screen, pygame.Rect(5 * self.square_size + self.dislocation_count_col,
+                                                     3 * self.square_size + self.dislocation_count_row,
+                                                     10, 2 * self.square_size), trans_color)
          if booly: # Drag and drop booly
 
              clicked_image = pygame.image.load('images/' + name + '.png')
