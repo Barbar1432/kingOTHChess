@@ -27,6 +27,7 @@ wtimer = timer()
 btimer = timer()
 btimer.turn = False
 event_type = 0
+board.positions() #KALDIR
 while running:
     for event in pygame.event.get():
         x, y = pygame.mouse.get_pos()
@@ -42,6 +43,8 @@ while running:
             if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
                 event_type = 0
                 # TODO: TEST IF THIS IS POSSIBLE MOVE IF NOT - NOT ALLOWED TO MOVE, RETURN BACK TO OLD POS
+                # TODO: Change the value of player_turn when one of the opponent makes the move
+
                 visuals.visualize(event_type, board)
                 player_turn *= -1
                 btimer.turn = not btimer.turn
@@ -59,5 +62,8 @@ while running:
     visuals.visualize(event_type, board)
     pygame.display.flip()
     clock.tick(60)
+
+
+
 
 pygame.quit()

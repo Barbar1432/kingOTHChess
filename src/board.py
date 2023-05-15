@@ -63,16 +63,41 @@ class board :
             # Clicked tile lit green
              self.screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
              self.screen.blit(clicked_image, (pos[1]-30 + self.dislocation_count_col, pos[0]-30 + self.dislocation_count_row))
+
+
     def draw(self, booly, pos, name, clickedpos):
         self.draw_board(booly, pos, name, clickedpos)
         pygame.display.flip()
 
     def move(self, sqSelected, sqDest):
+
         row, col = sqSelected
+
         piece = self.board[row][col]
-        self.board[row][col] = None
-        row, col = sqDest
-        self.board[row][col] = piece
+        piece.clear_list()
+        if isinstance(piece,Pawn):
+            piece.possible_moves_pawn(self.board)
+        elif isinstance(piece,King):
+            piece.possible_moves_king(self.board)
+        elif isinstance(piece, Knight):
+            piece.possible_moves_knight(self.board)
+        elif isinstance(piece, Bishop):
+            pass
+        elif isinstance(piece, Rook):
+            piece.possible_moves_rook(self.board)
+        elif isinstance(piece, Queen):
+            piece.possible_moves_queen(self.board)
+
+
+
+        print(self.board[row][col].possible_moves_list)
+
+        row_dest, col_dest = sqDest
+        if (row_dest, col_dest) in self.board[row][col].possible_moves_list:
+            self.board[row][col] = None
+            self.board[row_dest][col_dest] = piece
+            piece.position = (row_dest, col_dest)
+
 
 
 
@@ -81,6 +106,10 @@ class board :
             for column in range(len(self.board[0])):
                 if (self.board[row][column] != None):
                     self.board[row][column].position = (row,column)
+
+                    print( self.board[row][column].name, "pozisyonu" ,(row,column), "self", self.board[row][column].position) #KALDIR
+
+
 
     def get_Kingsposition(self, king):
         for row in range(len(self.board)):
