@@ -3,6 +3,7 @@ import time
 import pygame
 from board import board
 from visuals import drag_n_drop_visual, background, timer_white, timer_black, timer
+from aibot import bot
 # This is a sample Python script.
 
 # Press ⌃R to execute it or replace it with your code.
@@ -23,12 +24,25 @@ clock = pygame.time.Clock()
 running = True
 visuals = drag_n_drop_visual()
 player_turn = 1  # 1 == WHITE PLAYING ||  -1 == BLACK PLAYING
+
 wtimer = timer()
 btimer = timer()
 btimer.turn = False
+
+dummy = bot() # Welcome to life dummy
+dummy.ai_bool = True # Decide if you want to play against a bot
+dummy.color = 'black' # Decide bots color
+
 event_type = 0
 board.positions() #KALDIR
 while running:
+    if player_turn == -1 and dummy.ai_bool:
+        dummy.random_move(dummy.ai_bool, board)
+        player_turn *= -1
+        btimer.turn = not btimer.turn
+        wtimer.turn = not wtimer.turn
+
+
     for event in pygame.event.get():
         x, y = pygame.mouse.get_pos()
         # ONLY ALLOW CLICKS INSIDE THE PLAYING AREA
