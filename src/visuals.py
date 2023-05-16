@@ -14,7 +14,7 @@ def get_color(color):
 class drag_n_drop_visual:
     def __init__(self):
         self.sec = []
-        self.dragged = ()
+        #self.dragged = () # removed
         self.clicked = False
         self.clickedName = None
         self.clickedPos = ()
@@ -24,7 +24,6 @@ class drag_n_drop_visual:
             mouse_pos = pygame.mouse.get_pos()
             col, row = mouse_pos
             print("Coordinates: ", row, ",", col)
-            self.dragged = (row - b_board.dislocation_count_row, col - b_board.dislocation_count_col)
             row = (row - b_board.dislocation_count_row)// b_board.square_size
             col = (col - b_board.dislocation_count_col)// b_board.square_size
             if b_board.board[row][col] is not None:
@@ -46,12 +45,10 @@ class drag_n_drop_visual:
                 self.clicked = False
         if len(self.sec) == 2:
             b_board.move(self.sec[0], self.sec[1])
-            b_board.draw(self.clicked, self.dragged, self.clickedName, self.clickedPos)
+            b_board.draw(self.clicked, self.clickedName, self.clickedPos)
             self.sec = []
             self.clickedPos = ()
-        col, row = pygame.mouse.get_pos()
-        self.dragged = (row - b_board.dislocation_count_row, col - b_board.dislocation_count_col)
-        b_board.draw(self.clicked, self.dragged, self.clickedName, self.clickedPos)
+        b_board.draw(self.clicked, self.clickedName, self.clickedPos)
 
 
 def background(screen, b_board):

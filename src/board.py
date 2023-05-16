@@ -26,7 +26,7 @@ class board :
          self.dislocation_count_row = 100  # Dikey
          self.dislocation_count_col = 128  # Yatay
 
-    def draw_board(self, booly, pos, name, clickedpos):
+    def draw_board(self, booly, name, clickedpos):
          colors = [(255, 206, 158), (209, 139, 71)]
 
          for row in range(8):
@@ -64,13 +64,16 @@ class board :
              transparent_screen = pygame.Surface((self.square_size, self.square_size))
              transparent_screen.set_alpha(120)
              transparent_screen.fill((144, 238, 144))
+             pos1, pos2 = pygame.mouse.get_pos()
+             pos1 = pos1 - self.dislocation_count_row
+             pos2 = pos2 - self.dislocation_count_col
             # Clicked tile lit green
              self.screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
-             self.screen.blit(clicked_image, (pos[1]-30 + self.dislocation_count_col, pos[0]-30 + self.dislocation_count_row))
+             self.screen.blit(clicked_image, (pos1-30 + self.dislocation_count_row, pos2-30 + self.dislocation_count_col))
 
 
-    def draw(self, booly, pos, name, clickedpos):
-        self.draw_board(booly, pos, name, clickedpos)
+    def draw(self, booly, name, clickedpos):
+        self.draw_board(booly, name, clickedpos)
         pygame.display.flip()
 
     def move(self, sqSelected, sqDest):
