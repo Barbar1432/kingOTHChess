@@ -24,7 +24,8 @@ class Pawn(piece):
     def possible_moves_pawn(self, board):
 
             # moves_of_Pawn = []
-        if (self.played == False and self.color == 'black'):
+        (row, column) = self.position
+        if (row == 1 and self.color == 'black'):
             (row, column) = self.position
             self.possible_moves_list.append((row + 1, column))
             self.possible_moves_list.append((row + 2, column))
@@ -34,7 +35,7 @@ class Pawn(piece):
             (row, column) = self.position
             self.possible_moves_list.append((row + 1, column))
 
-        elif (self.played == False and self.color == 'white'):
+        elif (row == 6 and self.color == 'white'):
             (row, column) = self.position
             self.possible_moves_list.append((row - 1, column))
             self.possible_moves_list.append((row - 2, column))
@@ -62,10 +63,12 @@ class Bishop(piece):
     def possible_moves_bishop(self, board):
         (row, column) = self.position
 
-        while row > 0 and column < 7: #right top
+        while row > 0 and column < 7 : #right top
             row -= 1
             column += 1
-            self.possible_moves_list.append( (row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append( (row, column))
+            else:break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -76,7 +79,10 @@ class Bishop(piece):
         while row < 7 and column > 0: #sag asagi
             row += 1
             column -= 1
-            self.possible_moves_list.append( (row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append( (row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -87,7 +93,10 @@ class Bishop(piece):
         while row > 0 and column > 0 : #sol yukari
             row -= 1
             column -= 1
-            self.possible_moves_list.append( (row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append( (row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -98,7 +107,10 @@ class Bishop(piece):
         while row < 7 and column < 7: # sag asagi
             row += 1
             column += 1
-            self.possible_moves_list.append( (row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append( (row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -126,45 +138,37 @@ class Knight(piece):
     def possible_moves_knight(self, board):
         (row, column) = self.position
 
-        try:
+
+        if row - 2>=0 and row - 2<=7 and column + 1>=0 and column + 1<=7:
             self.possible_moves_list.append((row - 2, column + 1))
-        except IndexError:
-            pass
 
-        try:
+
+        if row - 1>=0 and row - 1<=7 and column + 2>=0 and column + 2<=7:
             self.possible_moves_list.append((row - 1, column + 2))
-        except IndexError:
-            pass
 
-        try:
+
+        if row + 1>=0 and row + 1<=7 and column + 2>=0 and column + 2<=7:
             self.possible_moves_list.append((row + 1, column + 2))
-        except IndexError:
-            pass
 
-        try:
+        if row + 2>=0 and row + 2<=7 and column + 1>=0 and column + 1<=7:
             self.possible_moves_list.append((row + 2, column + 1))
-        except IndexError:
-            pass
 
-        try:
+
+        if row - 2>=0 and row - 2<=7 and column - 1>=0 and column - 1<=7:
             self.possible_moves_list.append((row - 2, column - 1))
-        except IndexError:
-            pass
 
-        try:
+
+        if row - 1>=0 and row - 1<=7 and column - 2>=0 and column - 2<=7:
             self.possible_moves_list.append((row - 1, column - 2))
-        except IndexError:
-            pass
 
-        try:
+
+        if row + 2>=0 and row + 2<=7 and column - 1>=0 and column - 1<=7:
             self.possible_moves_list.append((row + 2, column - 1))
-        except IndexError:
-            pass
 
-        try:
+
+        if row + 1>=0 and row + 1<=7 and column - 2>=0 and column - 2<=7:
             self.possible_moves_list.append((row + 1, column - 2))
-        except IndexError:
-            pass
+
 
 
 class King(piece):
@@ -225,13 +229,12 @@ class Queen(piece):
     def possible_moves_queen(self, board):
         (row, column) = self.position
 
-
-
         for i in range(column + 1, len(board[0])):
-            # if board[row][i] is None:  # empty square
-            self.possible_moves_list.append((row, i))
-            '''elif board[row][i].color != self.color:  # opponent's piece
+            if board[row][i] is None:  # empty square
                 self.possible_moves_list.append((row, i))
+            elif board[row][i].color == self.color:
+                break
+            '''self.possible_moves_list.append((row, i))
                 break  # stop checking in this direction if there is an opponent's piece
             else:  # own piece blocking the way
                 break  # stop checking in this direction'''
@@ -239,7 +242,10 @@ class Queen(piece):
             # Check moves to the left
         for i in range(column - 1, -1, -1):
             # if board[row][i] is None:  # empty square
-            self.possible_moves_list.append((row, i))
+            if board[row][i] is None:  # empty square
+                self.possible_moves_list.append((row, i))
+            elif board[row][i].color == self.color:
+                break
             '''elif board[row][i].color != self.color:  # opponent's piece
                 self.possible_moves_list.append((row, i))
                 break  # stop checking in this direction if there is an opponent's piece
@@ -249,7 +255,10 @@ class Queen(piece):
             # Check moves down
         for i in range(row + 1, len(board)):
             # if board[i][column] is None:  # empty square
-            self.possible_moves_list.append((i, column))
+            if board[i][column] is None:  # empty square
+                self.possible_moves_list.append((i, column))
+            elif board[i][column].color == self.color:
+                break
             '''elif board[i][column].color != self.color:  # opponent's piece
                 self.possible_moves_list.append((i, column))
                 break  # stop checking in this direction if there is an opponent's piece
@@ -259,19 +268,20 @@ class Queen(piece):
             # Check moves up
         for i in range(row - 1, -1, -1):
             # if board[i][column] is None:  # empty square
-            self.possible_moves_list.append((i, column))
-            '''elif board[i][column].color != self.color:  # opponent's piece
+            if board[i][column] is None:  # empty square
                 self.possible_moves_list.append((i, column))
-                break  # stop checking in this direction if there is an opponent's piece
-            else:  # own piece blocking the way
-                break  # stop checking in this direction'''
+            elif board[i][column].color == self.color:
+                break
 
         (row, column) = self.position
 
         while row > 0 and column < 7:  # right top
             row -= 1
             column += 1
-            self.possible_moves_list.append((row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append((row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -281,7 +291,10 @@ class Queen(piece):
         while row < 7 and column > 0:  # sag asagi
             row += 1
             column -= 1
-            self.possible_moves_list.append((row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append((row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -291,7 +304,10 @@ class Queen(piece):
         while row > 0 and column > 0:  # sol yukari
             row -= 1
             column -= 1
-            self.possible_moves_list.append((row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append((row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -301,7 +317,10 @@ class Queen(piece):
         while row < 7 and column < 7:  # sag asagi
             row += 1
             column += 1
-            self.possible_moves_list.append((row, column))
+            if board[row][column] == None:
+                self.possible_moves_list.append((row, column))
+            else:
+                break
             '''if board[row][column] != None and self.color == board[row][column].color:  # opponent yemece
                 self.possible_moves_list.pop()
                 break'''
@@ -323,10 +342,11 @@ class Rook(piece):
         (row, column) = self.position
 
         for i in range(column + 1, len(board[0])):
-            #if board[row][i] is None:  # empty square
-            self.possible_moves_list.append((row, i))
-            '''elif board[row][i].color != self.color:  # opponent's piece
+            if board[row][i] is None:  # empty square
                 self.possible_moves_list.append((row, i))
+            elif board[row][i].color == self.color:
+                break
+            '''self.possible_moves_list.append((row, i))
                 break  # stop checking in this direction if there is an opponent's piece
             else:  # own piece blocking the way
                 break  # stop checking in this direction'''
@@ -334,7 +354,10 @@ class Rook(piece):
             # Check moves to the left
         for i in range(column - 1, -1, -1):
             #if board[row][i] is None:  # empty square
-            self.possible_moves_list.append((row, i))
+            if board[row][i] is None:  # empty square
+                self.possible_moves_list.append((row, i))
+            elif board[row][i].color == self.color:
+                break
             '''elif board[row][i].color != self.color:  # opponent's piece
                 self.possible_moves_list.append((row, i))
                 break  # stop checking in this direction if there is an opponent's piece
@@ -344,7 +367,10 @@ class Rook(piece):
             # Check moves down
         for i in range(row + 1, len(board)):
             #if board[i][column] is None:  # empty square
-            self.possible_moves_list.append((i, column))
+            if board[i][column] is None:  # empty square
+                self.possible_moves_list.append((i, column))
+            elif board[i][column].color == self.color:
+                break
             '''elif board[i][column].color != self.color:  # opponent's piece
                 self.possible_moves_list.append((i, column))
                 break  # stop checking in this direction if there is an opponent's piece
@@ -354,7 +380,10 @@ class Rook(piece):
             # Check moves up
         for i in range(row - 1, -1, -1):
             #if board[i][column] is None:  # empty square
-            self.possible_moves_list.append((i, column))
+            if board[i][column] is None:  # empty square
+                self.possible_moves_list.append((i, column))
+            elif board[i][column].color == self.color:
+                break
             '''elif board[i][column].color != self.color:  # opponent's piece
                 self.possible_moves_list.append((i, column))
                 break  # stop checking in this direction if there is an opponent's piece
