@@ -7,6 +7,7 @@ class board :
          self.Anzahlmoves = 0
          self.whiteKing =King('white', "bSah")
          self.blackKing = King('black', "sSah")
+
          self.board = [
             [Rook('black',"sK"), Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), King('black',"sSah"), Bishop('black',"sFil"),
              Knight('black',"sAt"), Rook('black',"sK")],
@@ -101,6 +102,8 @@ class board :
             self.board[row_dest][col_dest] = piece
             piece.position = (row_dest, col_dest)
         self.Anzahlmoves += 1
+        print(self.bewertungsFunktion())
+
 
     def positions(self):
         for row in range(len(self.board)):
@@ -138,9 +141,6 @@ class board :
         return False
 
     def isLegal(self, start_pos, dest_pos):
-
-
-
         start_row, start_col = start_pos
         dest_row, dest_col = dest_pos
         start = self.board[start_row][start_col] # start is a piece
@@ -169,6 +169,44 @@ class board :
                 return False
         else :
             return True
+
+
+
+
+
+    def bewertungsFunktion(self):
+        whiteCurrentPieces = []
+        blackCurrentPieces = []
+        whitePoints = 0
+        blackPoints = 0
+        center = [self.board[3][4], self.board[4][4], self.board[3][3], self.board[4][3]]
+        aroundCenter =[self.board[2][3], self.board[2][4], self.board[3][2], self.board[3][5],self.board[4][2], self.board[4][5], self.board[5][3], self.board[5][4]]
+        for row in range(len(self.board)):
+            for column in range(len(self.board[0])):
+                piece = self.board[row][column]
+                if (piece is not None):
+                   if piece.color == "white":
+                      whiteCurrentPieces.append(piece)
+                      whitePoints += piece.point
+                   if piece.color == "black":
+                       blackCurrentPieces.append(piece)
+                       blackPoints += piece.point
+        for piece in center:
+            if piece is not None:
+               if piece.color == "white":
+                   whitePoints += 1
+               if piece.color == "black":
+                   blackPoints += 1
+        for piece in aroundCenter:
+            if piece is not None:
+               if piece.name == "bSah":
+                   whitePoints += 2.2
+               if piece.color == "s.sah":
+                   blackPoints += 2.2
+
+        bewertung = (whitePoints - blackPoints)*0.10
+        return bewertung
+
 
 
 

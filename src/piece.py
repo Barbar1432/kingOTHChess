@@ -2,11 +2,12 @@ import pygame
 
 
 class piece :
-    def __init__(self,color,type):
+    def __init__(self,color,type,point):
         self.color =color
         self.type=type
         self.position = (0,0)
         self.possible_moves_list = []
+        self.point= point
 
 
 
@@ -14,7 +15,7 @@ class piece :
 
 class Pawn(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'pawn')
+        super().__init__(color, 'pawn',1)
         self.name = name
         self.position = (0,0)
         self.played = False
@@ -51,9 +52,10 @@ class Pawn(piece):
 
 class Bishop(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'bishop')
+        super().__init__(color, 'bishop',3)
         self.name=name
         self.position = (0,0)
+
     def clear_list(self):
         self.possible_moves_list.clear()
 
@@ -113,9 +115,10 @@ class Bishop(piece):
 
 class Knight(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'knight')
+        super().__init__(color, 'knight',3)
         self.name=name
         self.position = (0,0)
+
 
     def clear_list(self):
         self.possible_moves_list.clear()
@@ -166,7 +169,7 @@ class Knight(piece):
 
 class King(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'king')
+        super().__init__(color, 'king',10)
         self.name=name
         self.position = (0,0)
 
@@ -211,9 +214,10 @@ class King(piece):
 
 class Queen(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'queen')
+        super().__init__(color, 'queen',9)
         self.name=name
         self.position = (0,0)
+
 
     def clear_list(self):
         self.possible_moves_list.clear()
@@ -308,7 +312,7 @@ class Queen(piece):
 
 class Rook(piece):
     def __init__(self, color,name):
-        super().__init__(color,'rook')
+        super().__init__(color,'rook',5)
         self.name=name
         self.position = (0,0)
 
