@@ -3,6 +3,7 @@ import board
 import piece
 import main
 import visuals
+import timeit
 
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):

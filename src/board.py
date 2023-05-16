@@ -76,6 +76,7 @@ class board :
         self.draw_board(booly, name, clickedpos)
         pygame.display.flip()
 
+
     def move(self, sqSelected, sqDest):
 
         row, col = sqSelected
@@ -120,18 +121,10 @@ class board :
                 if self.board[row][column] == king:
                     return (row, column)
 
-    def simulate_move(self, start_pos, dest_pos): #gpt
-        row, col = start_pos
-        piece = self.board[row][col]
-        self.board[row][col] = None
-        row_dest, col_dest = dest_pos
-        self.board[row_dest][col_dest] = piece
-        piece.position = (row_dest, col_dest)
 
-    def is_king_threatened(self, start_pos, dest_pos, king): #gpt
+
+    def is_king_checked(self, king): #gpt
         kingPos = self.get_Kingsposition(king)
-        self.simulate_move(start_pos, dest_pos)
-
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 if self.board[row][column] is None:
@@ -140,7 +133,6 @@ class board :
                     continue
                 if king in self.board[row][column].possible_moves_list:
                     return True
-
         return False
 
     def isLegal(self, start_pos, dest_pos):
@@ -164,18 +156,8 @@ class board :
         if start.possible_moves_list.__contains__(dest_pos) and dest !=None:
             if dest.color == start.color:
                 return False
-        if self.Anzahlmoves % 2 == 0:
-            if self.is_king_threatened(start_pos, dest_pos,self.whiteKing): #if the move results in a check position for the playing side is ilegal
-                return False
-        if self.Anzahlmoves % 2 == 1:
-            if self.is_king_threatened(start_pos, dest_pos,self.blackKing): #if the move results in a check position for the playing side is ilegal
-                return False
         else :
             return True
-
-
-
-
 
     def bewertungsFunktion(self):
         whiteCurrentPieces = []
@@ -210,7 +192,44 @@ class board :
         bewertung = (whitePoints - blackPoints)*0.10
         return bewertung
 
+    def get_playingSide_pieces(self):
+        positions = []
+        if (self.Anzahlmoves % 2 ==0 ):
+            for row in range(len(self.board)):
+                for column in range(len(self.board[0])):
+                    if self.board[row][column] is piece:
+                        if self.board[row][column].color!="black":
+                            positions.append ((row, column))
 
+        return positions
+    def zugGenerator(self):
+        positions = self.get_playingSide_pieces()
+        züge = { }
+        for position in positions:
+            row,column = position
+            piece =board[row][column]
+            piece.clear_list()
+            if isinstance(piece, Pawn):
+                piece.possible_moves_pawn(self.board)
+            elif isinstance(piece, King):
+                piece.possible_moves_king(self.board)
+            elif isinstance(piece, Knight):
+                piece.possible_moves_knight(self.board)
+            elif isinstance(piece, Bishop):
+                piece.possible_moves_bishop(self.board)
+            elif isinstance(piece, Rook):
+                piece.possible_moves_rook(self.board)
+            elif isinstance(piece, Queen):
+                piece.possible_moves_queen(self.board)
+            züge[position] = piece.possible_moves_list
+        legal_moves = {}
+        for position, moves in züge.items(): #gpt
+            for move in moves:
+                if self.isLegal(position, move):
+                    if position not in legal_moves:
+                        legal_moves[position] = [move]
+                    else:
+                        legal_moves[position].append(move)
 
-
+        return legal_moves
 

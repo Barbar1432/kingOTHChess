@@ -82,7 +82,7 @@ class Pawn(piece):
 
 class Bishop(piece):
     def __init__(self, color,name):
-        super().__init__(color, 'bishop',3)
+        super().__init__(color, 'bishop',3.01)
         self.name=name
         self.position = (0,0)
 
