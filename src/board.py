@@ -4,6 +4,9 @@ from piece import piece
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
 class board :
     def __init__(self):
+         self.Anzahlmoves = 0
+         self.whiteKing =King('white', "bSah")
+         self.blackKing = King('black', "sSah")
          self.board = [
             [Rook('black',"sK"), Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), King('black',"sSah"), Bishop('black',"sFil"),
              Knight('black',"sAt"), Rook('black',"sK")],
@@ -72,9 +75,9 @@ class board :
     def move(self, sqSelected, sqDest):
 
         row, col = sqSelected
-
         piece = self.board[row][col]
-        piece.clear_list()
+        if self.board[row][col]!= None:
+             piece.clear_list()
         if isinstance(piece,Pawn):
             piece.possible_moves_pawn(self.board)
         elif isinstance(piece,King):
@@ -97,48 +100,60 @@ class board :
             self.board[row][col] = None
             self.board[row_dest][col_dest] = piece
             piece.position = (row_dest, col_dest)
-
-
-
+        self.Anzahlmoves += 1
 
     def positions(self):
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 if (self.board[row][column] != None):
-                    self.board[row][column].position = (row,column)
+                    self.board[row][column].position = (row, column)
 
-                    print( self.board[row][column].name, "pozisyonu" ,(row,column), "self", self.board[row][column].position) #KALDIR
-
-
-
-    def get_Kingsposition(self, sqSelected):
-        r_selected ,c_selected = sqSelected
+    def get_Kingsposition(self, king):
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
-                if isinstance(self.board[row][column], King) and self.board[r_selected][c_selected].color == self.board[row][column].color:
+                if self.board[row][column] == king:
                     return (row, column)
 
-    def is_king_threatened(self,start_pos,dest_pos):
+    def simulate_move(self, start_pos, dest_pos): #gpt
+        row, col = start_pos
+        piece = self.board[row][col]
+        self.board[row][col] = None
+        row_dest, col_dest = dest_pos
+        self.board[row_dest][col_dest] = piece
+        piece.position = (row_dest, col_dest)
 
-        (kingr, kingc)= self.get_Kingsposition(start_pos)
-        self.move(start_pos,dest_pos)
+    def is_king_threatened(self, start_pos, dest_pos, king): #gpt
+        kingPos = self.get_Kingsposition(king)
+        self.simulate_move(start_pos, dest_pos)
+
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
-                if self.board[kingr][kingc].color == self.board[row][column].color:
+                if self.board[row][column] is None:
                     continue
-                if  self.board[kingr][kingc] in self.board[row][column].possible_moves_list:
-                    self.move(self, dest_pos, start_pos) #undo
+                if king.color == self.board[row][column].color:
+                    continue
+                if king in self.board[row][column].possible_moves_list:
                     return True
-        self.move(self, dest_pos, start_pos)  # undo
+
         return False
 
-
-
     def isLegal(self, start_pos, dest_pos):
+
+
+
         start_row, start_col = start_pos
         dest_row, dest_col = dest_pos
         start = self.board[start_row][start_col] # start is a piece
+
         dest = self.board[dest_row][dest_col] # dest can either be a square (None) or a piece
+        if self.Anzahlmoves % 2 == 0:
+            if start is not None:
+                if start.color == "black":
+                    return False
+        if self.Anzahlmoves % 2 == 1:
+            if start is not None:
+                if start.color == "white":
+                    return False
         if start is None : # look if there actually is a piece on the start square
             return False
         if not start.possible_moves_list.__contains__(dest_pos) : # look if the destination is a possible move for the piece
@@ -146,8 +161,12 @@ class board :
         if start.possible_moves_list.__contains__(dest_pos) and dest !=None:
             if dest.color == start.color:
                 return False
-        if self.is_king_threatened(start_pos, dest_pos): #if the move results in a check position for the playing side is ilegal
-            return False
+        if self.Anzahlmoves % 2 == 0:
+            if self.is_king_threatened(start_pos, dest_pos,self.whiteKing): #if the move results in a check position for the playing side is ilegal
+                return False
+        if self.Anzahlmoves % 2 == 1:
+            if self.is_king_threatened(start_pos, dest_pos,self.blackKing): #if the move results in a check position for the playing side is ilegal
+                return False
         else :
             return True
 
