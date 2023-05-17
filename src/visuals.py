@@ -47,7 +47,7 @@ class drag_n_drop_visual:
                 self.sec.append(dest_selected)
                 self.clicked = False
         if len(self.sec) == 2:
-            b_board.move(self.sec[0], self.sec[1])
+            b_board.moveZa(self.sec[0], self.sec[1])
             b_board.draw(self.clicked, self.clickedName, self.clickedPos)
             self.sec = []
             self.clickedPos = ()
