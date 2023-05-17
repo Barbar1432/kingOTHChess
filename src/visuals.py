@@ -1,5 +1,8 @@
+import string
+
 import pygame
 from board import board
+from piece import Rook, Knight, Bishop, Queen, King, Pawn
 def get_color(color):
     if color == "background":
         return (241, 222, 201)
@@ -127,3 +130,66 @@ class timer:
     def __init__(self):
         self.time = 72000  # 20 Minutes
         self.turn = True
+
+#def FENtoBoard(FEN):
+#    board = [[None for _ in range(8)] for _ in range(8)]
+#    i = 0
+#    j = 0
+#    color = 'non-colored'
+#    while FEN != "":
+#        char = FEN[0]
+#        FEN = ''.join(FEN.split(char, 1))
+#        if char == '/':
+#            i += 1
+#            j = 0
+#        elif char == 'p':
+#            board[i][j] = Pawn('black',"sPion")
+#            j += 1
+#        elif char == 'n':
+#            board[i][j] = Knight('black',"sAt")
+#            j += 1
+#        elif char == 'b':
+#            board[i][j] = (Bishop('black',"sFil"))
+#            j += 1
+#        elif char == 'r':
+#            board[i][j] = (Rook('black',"sK"))
+#            j += 1
+#        elif char == 'q':
+#            board[i][j] = (Queen('black',"sV"))
+#            j += 1
+#        elif char == 'k':
+#            board[i][j] = (King('black', "sSah"))
+#            j += 1
+#        elif char == 'N':
+#            board[i][j] = (Knight('white', "bAt"))
+#            j += 1
+#        elif char == 'B':
+#            board[i][j] = (Bishop('white', "bFil"))
+#            j += 1
+#        elif char == 'R':
+#            board[i][j] = (Rook('white', "bK"))
+#            j += 1
+#        elif char == 'Q':
+#            board[i][j] = (Queen('white', "bV"))
+#            j += 1
+#        elif char == 'K':
+#            board[i][j] = (King('white', "bSah"))
+#            j += 1
+#        elif char == 'P':
+#            board[i][j] = (Pawn('white', "bPion"))
+#            j += 1
+#        elif char.isdigit():
+#            j += int(char)
+#        elif char == ' ':
+#            char = FEN[0]
+#            FEN = ''.join(FEN.split(char, 1))
+#            if char == 'w':
+#                color = 'white'
+#            elif char == 'b':
+#                color = 'black'
+#            print("Kalan FEN:", FEN)
+#            FEN = ""
+#        else:
+#            print("There is a problem!", char)
+#            # Board is done
+#    return board, color
