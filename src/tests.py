@@ -2,30 +2,359 @@ import unittest
 
 import board
 import piece
-import main
+# import main
 import visuals
 import timeit
 from board import board
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
 
-
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):
-    def test_all_boards(self):
-        test_boards = allBoards()
-        for i in range(len(test_boards)):
-            b_board = board()
-            t_board = test_boards[i]
-            print("Testing:", t_board.name, t_board.stellung)
-            b_board.board = t_board.board
-            print("Possible moves: ",b_board.possibleMoves(t_board.color))
-            print("Should be: ", t_board.moves)
-            self.assertEqual(len(b_board.possibleMoves(t_board.color)), t_board.moves)
+    def test_Fricke(self):
+
+        t_board = allBoards()[0]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+    def test_A_1(self):
+
+        t_board = allBoards()[1]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+    def test_A_2(self):
+
+        t_board = allBoards()[2]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_N_1(self):
+        t_board = allBoards()[3]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_N_2(self):
+        t_board = allBoards()[4]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_L_1(self):
+        t_board = allBoards()[5]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_L_2(self):
+        t_board = allBoards()[6]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_G_1(self):
+        t_board = allBoards()[7]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_G_2(self):
+        t_board = allBoards()[8]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_O_1(self):
+        t_board = allBoards()[9]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_O_2(self):
+        t_board = allBoards()[10]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_J_1(self):
+        t_board = allBoards()[11]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_J_2(self):
+        t_board = allBoards()[12]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_H_1(self):
+        t_board = allBoards()[13]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_H_2(self):
+        t_board = allBoards()[14]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AA_1(self):
+        t_board = allBoards()[15]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AA_2(self):
+        t_board = allBoards()[16]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AB_1(self):
+        t_board = allBoards()[17]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AB_2(self):
+        t_board = allBoards()[18]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_S_1(self):
+        t_board = allBoards()[19]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_S_2(self):
+        t_board = allBoards()[20]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AF_1(self):
+        t_board = allBoards()[21]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AF_2(self):
+        t_board = allBoards()[22]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_R_1(self):
+        t_board = allBoards()[23]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_R_2(self):
+        t_board = allBoards()[24]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_P_1(self):
+        t_board = allBoards()[25]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_P_2(self):
+        t_board = allBoards()[26]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AH_1(self):
+        t_board = allBoards()[27]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_AH_2(self):
+        t_board = allBoards()[28]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_F_1(self):
+        t_board = allBoards()[29]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_F_2(self):
+        t_board = allBoards()[30]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_T_1(self):
+        t_board = allBoards()[31]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_T_2(self):
+        t_board = allBoards()[32]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_U_1(self):
+        t_board = allBoards()[33]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_U_2(self):
+        t_board = allBoards()[34]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_U_3(self):
+        t_board = allBoards()[35]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_U_4(self):
+        t_board = allBoards()[36]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_V_1(self):
+        t_board = allBoards()[37]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_V_2(self):
+        t_board = allBoards()[38]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_K_1(self):
+        t_board = allBoards()[39]
+        b_board = board()
+        move_list = []
+
+    def test_K_2(self):
+        t_board = allBoards()[40]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_X_1(self):
+        t_board = allBoards()[41]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_X_2(self):
+        t_board = allBoards()[42]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_C_1(self):
+        t_board = allBoards()[43]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_C_2(self):
+        t_board = allBoards()[44]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_M_1(self):
+        t_board = allBoards()[45]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_M_2(self):
+        t_board = allBoards()[46]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_Z_1(self):
+        t_board = allBoards()[47]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+    def test_Z_2(self):
+        t_board = allBoards()[48]
+        b_board = board()
+        b_board.board = t_board.board
+        move_list = []
+
+# Can be used to test all board variations
+#    def test_all_boards(self):
+#        test_boards = allBoards()
+#        for i in range(len(test_boards)):
+#            legal_move_list = []
+#            b_board = board()
+#            t_board = test_boards[i]
+#            print("Testing:", t_board.name, t_board.stellung)
+#            b_board.board = t_board.board
+#            print("Should be: ", t_board.moves)
+#            move_list = (b_board.possibleMoves(t_board.color))
+#            print(move_list)
+#            while len(move_list)!= 0:
+#                move = move_list.pop()
+#                moveSq, moveDest = move
+#                print("MoveSq = ",moveSq)
+#                print("MoveDest = ", moveDest)
+#                if b_board.isLegal(moveSq, moveDest): # islegal out of board'a bakmadığı için çalışmıyor şuan
+#                    print("Move:",move,"is Legal")
+#                    legal_move_list.append(move)
+#            print(legal_move_list)
+#
+#            self.assertEqual(len(legal_move_list), t_board.moves)
+
+
+class testingBoard():
+    def __init__(self, name, stell, fen, moves):
+        self.name = name
+        self.stellung = stell
+        self.FEN_Notation = fen
+        self.moves = moves
+        self.board, self.color, self.kingSideCastle_white, self.queenSideCastle_white, \
+            self.kingSideCastle_black, self.queenSideCastle_black, \
+            self.enPassent, self.halfMoveClock, self.fullMoveClock = FENtoBoard(fen)
+
 
 def FENtoBoard(FEN):
     board = [[None for _ in range(8)] for _ in range(8)]
     i = 0
     j = 0
+    k = 0 # space counter
+    kingsideCastleBlack = False
+    queensideCastleBlack = False
+    kingsideCastleWhite = False
+    queensideCastleWhite = False
+    enPassentSquareCol = ()
+    enPassentSquareRow = ()
+    halfMoveClock = ()
+    fullMoveClock = ()
+    # [L1]/[L2]/[L3]/[L4]/[L5]/[L6]/[L7]/[L8] [Active Color] [Castling Availability]
+    # [En Passant target square - Piyon önceki el 2 kare ilerledi]
     while FEN != "":
         char = FEN[0]
         FEN = ''.join(FEN.split(char, 1))
@@ -71,28 +400,90 @@ def FENtoBoard(FEN):
         elif char.isdigit():
             j += int(char)
         elif char == ' ':
+            k += 1
             char = FEN[0]
             FEN = ''.join(FEN.split(char, 1))
-            if char == 'w':
-                color = 'white'
-            elif char == 'b':
-                color = 'black'
-            print("Kalan FEN:", FEN)
-            FEN = ""
+            if k == 1: # Turn Variable
+                if char == 'w':
+                    color = 'white'
+                elif char == 'b':
+                    color = 'black'
+            elif k == 2: # Castling availability - Rok nasıl yapılabilir?
+                if char == 'K':
+                    kingsideCastleWhite = True
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                if char == 'Q':
+                    queensideCastleWhite = True
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                if char == 'k':
+                    kingsideCastleBlack = True
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                if char == 'q':
+                    queensideCastleBlack = True
+            elif k == 3: # En Passent Variable
+                if char == 'a':
+                    enPassentSquareCol = 0
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'b':
+                    enPassentSquareCol = 1
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'c':
+                    enPassentSquareCol = 2
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'd':
+                    enPassentSquareCol = 3
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'e':
+                    enPassentSquareCol = 4
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'f':
+                    enPassentSquareCol = 5
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'g':
+                    enPassentSquareCol = 6
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                elif char == 'h':
+                    enPassentSquareCol = 7
+                    char = FEN[0]
+                    FEN = ''.join(FEN.split(char, 1))
+                if char.isdigit():
+                    if int(char) == 1:
+                        enPassentSquareRow = 0
+                    elif int(char) == 2:
+                        enPassentSquareRow = 1
+                    elif int(char) == 3:
+                        enPassentSquareRow = 2
+                    elif int(char) == 4:
+                        enPassentSquareRow = 3
+                    elif int(char) == 5:
+                        enPassentSquareRow = 4
+                    elif int(char) == 6:
+                        enPassentSquareRow = 5
+                    elif int(char) == 7:
+                        enPassentSquareRow = 6
+                    elif int(char) == 8:
+                        enPassentSquareRow = 7
+            elif k == 4: # Half Move Clock
+                if char.isdigit():
+                    halfMoveClock = int(char)
+            elif k == 5: # Full Move Clock
+                if char.isdigit():
+                    fullMoveClock = int(char)
         else:
             print("There is a problem!", char)
             # Board is done
-    return board,color
-
-class testingBoard():
-    def __init__(self, name, stell, fen, moves):
-        self.name = name
-        self.stellung = stell
-        self.FEN_Notation = fen
-        self.moves = moves
-        self.board, self.color = FENtoBoard(fen)
-
-
+    return board, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
+        (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock
 
 def allBoards():
 

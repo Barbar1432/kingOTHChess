@@ -115,8 +115,8 @@ class board :
         elif isinstance(piece, Queen):
             piece.possible_moves_queen(self.board)
 
-        print(self.board[row][col].possible_moves_list)
-        print(self.is_king_threatened(sqSelected, sqDest, self.whiteKing))
+        #print(self.board[row][col].possible_moves_list)
+        #print(self.is_king_threatened(sqSelected, sqDest, self.whiteKing))
 
         row_dest, col_dest = sqDest
         if self.isLegal(sqSelected,sqDest): #(row_dest, col_dest) in self.board[row][col].possible_moves_list and
@@ -142,8 +142,8 @@ class board :
                         if (self.board[x][y].color != king.color):
                             sq =(x,y)
                             self.callPossibleMoves(sq)
-                            print(self.board[x][y].possible_moves_list)
-                            print(kingPos)
+                            #print(self.board[x][y].possible_moves_list)
+                            #print(kingPos)
                             if (self.board[x][y].possible_moves_list.__contains__(kingPos)):
                                self.board[row][column] = pinned
                                return True
@@ -180,6 +180,11 @@ class board :
             return False
         if not start.possible_moves_list.__contains__(dest_pos) : # look if the destination is a possible move for the piece
             return False
+        if dest is not None:  # look if there actually is a piece on the start square
+             if start.color=="black" and dest.color== "black":
+                return False
+             if start.color == "white" and dest.color == "white":
+                 return False
         if (self.is_king_threatened(start_pos,dest_pos, self.whiteKing)):
             return False
         else :
@@ -248,7 +253,7 @@ class board :
 
        try:
            legalMoves = self.legalMoves()
-           print(legalMoves[sqSelected])
+           #print(legalMoves[sqSelected])
            row, col = sqSelected
            piece = self.board[row][col]
            row_dest, col_dest = sqDest
@@ -259,6 +264,6 @@ class board :
                     self.board[row_dest][col_dest] = piece
                     piece.position = (row_dest, col_dest)
                     self.Anzahlmoves+= 1
-                    print(self.Anzahlmoves)
+                    #print(self.Anzahlmoves)
        except KeyError:
            return
