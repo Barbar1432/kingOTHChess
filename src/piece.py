@@ -1,5 +1,7 @@
 import pygame
 
+import pygame
+
 
 class piece:
     def __init__(self, color, type, point):
@@ -384,13 +386,6 @@ class Rook(piece):
             elif board[i][column].color != self.color:
                 self.possible_moves_list.append((i, column))
                 break
-
-
-
-
-
-
-
 
 
 
