@@ -162,9 +162,15 @@ class board :
     def isLegal(self, start_pos, dest_pos):
         start_row, start_col = start_pos
         dest_row, dest_col = dest_pos
+
+
         if not (0 <= start_row < len(self.board) and 0 <= start_col < len(self.board[0])):
             return False
         if not (0 <= dest_row < len(self.board) and 0 <= dest_col < len(self.board[0])):
+            return False
+        if (self.Anzahlmoves %2 == 0 and self.board[start_row][start_col].color != "white"):
+            return False
+        if (self.Anzahlmoves % 2 == 1 and self.board[start_row][start_col].color != "black"):
             return False
         start = self.board[start_row][start_col] # start is a piece
 
@@ -216,6 +222,9 @@ class board :
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 if (self.board[row][column] != None):
+                   if self.Anzahlmoves % 2==0: #sıra beyazda
+                       if (self.board[row][column].color == "black "):
+                           continue
                        a,b =self.board[row][column].position
                        pos= (a,b)
                        self.callPossibleMoves(pos)
@@ -223,17 +232,33 @@ class board :
                        for pM in self.board[row][column].possible_moves_list:
                             if(self.isLegal(pos,pM)):
                                  legalMoves[self.board[row][column].position].append(pM)
+                   if self.Anzahlmoves % 2 == 1:
+                       if (self.board[row][column].color == "white"):  #sıra siyahta
+                           continue
+                       a, b = self.board[row][column].position
+                       pos = (a, b)
+                       self.callPossibleMoves(pos)
+                       legalMoves[self.board[row][column].position] = []
+                       for pM in self.board[row][column].possible_moves_list:
+                           if (self.isLegal(pos, pM)):
+                               legalMoves[self.board[row][column].position].append(pM)
         return legalMoves
 
     def moveZa (self,sqSelected, sqDest):
-         legalMoves = self.legalMoves()
-         print(legalMoves[sqSelected])
-         row, col = sqSelected
-         piece = self.board[row][col]
-         if self.board[row][col] != None:
-            if legalMoves[sqSelected].__contains__(sqDest):
-                row_dest, col_dest = sqDest
-                self.board[row][col] = None
-                self.board[row_dest][col_dest] = piece
-                piece.position = (row_dest, col_dest)
 
+       try:
+           legalMoves = self.legalMoves()
+           print(legalMoves[sqSelected])
+           row, col = sqSelected
+           piece = self.board[row][col]
+           row_dest, col_dest = sqDest
+           if self.board[row][col] != None:
+                if legalMoves[sqSelected].__contains__(sqDest):
+                    row_dest, col_dest = sqDest
+                    self.board[row][col] = None
+                    self.board[row_dest][col_dest] = piece
+                    piece.position = (row_dest, col_dest)
+                    self.Anzahlmoves+= 1
+                    print(self.Anzahlmoves)
+       except KeyError:
+           return
