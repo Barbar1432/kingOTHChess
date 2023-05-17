@@ -210,7 +210,33 @@ class board :
         bewertung = (whitePoints - blackPoints)*0.10
         return bewertung
 
+#TODO: BU MU BOZUK ANLAMADIM
+    # To get possible moves for a specific color
+    def possibleMoves(self, color):
+        list_of_possible_moves = []
+        for row in range(8):
+            for col in range(8):
+                piece = self.board[row][col]
+                if piece is not None and piece.color == color:
+                    # Collect all possible moves
+                    #piece.clear_list()
+                    if isinstance(piece, Pawn):
+                        piece.possible_moves_pawn(self.board)
+                    elif isinstance(piece, King):
+                        piece.possible_moves_king(self.board)
+                    elif isinstance(piece, Knight):
+                        piece.possible_moves_knight(self.board)
+                    elif isinstance(piece, Bishop):
+                        piece.possible_moves_bishop(self.board)
+                    elif isinstance(piece, Rook):
+                        piece.possible_moves_rook(self.board)
+                    elif isinstance(piece, Queen):
+                        piece.possible_moves_queen(self.board)
+                    while (len(piece.possible_moves_list) != 0):
+                        dest = piece.possible_moves_list.pop()
+                        piece_and_its_move = ((row, col), dest)  # Create a tuple as: ((Current Pos),(Destination))
+                        list_of_possible_moves.append(piece_and_its_move)
 
-
+        return list_of_possible_moves
 
 
