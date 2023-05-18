@@ -450,23 +450,41 @@ def returnAllMoves(b_board, t_board):
         for col in range(8):
             piece = b_board.board[row][col]
             if piece is not None and piece.color == t_board.color:
-                if piece == Rook('black',"sK"):
-                    if (row, col) != (0, 0) or (row, col) != (0, 7):
-                        b_board.board[row][col].rook_played = True
-                if piece == Rook('white',"bK"):
-                    if (row, col) != (7, 0) or (row, col) != (7, 7):
-                        b_board.board[row][col].rook_played = True
-                if piece == King('black', "sSah"):
-                    if (row, col) != (0, 4):
-                        b_board.board[row][col].king_moved = True
-                if piece == King('white', "bSah"):
-                    if (row, col) != (7, 4):
-                        b_board.board[row][col].king_moved = True
                 legal_moves = moves[(row,col)]
+                if isinstance(piece, Rook):
+                    if piece.color == 'black':
+                        if piece.position == (0,0):
+                            piece.rook_moved = False
+                        elif piece.position == (0,7):
+                            piece.rook_moved = False
+                        else:
+                            piece.rook_moved = True
+                    if piece.color == 'white':
+                        if piece.position == (7,0):
+                            piece.rook_moved = False
+                        elif piece.position == (7,7):
+                            piece.rook_moved = False
+                        else:
+                            piece.rook_moved = True
+                    #if piece.color == 'black':
+                    #    if t_board.queenSideCastle_black and t_board.kingSideCastle_black:
+                    #        piece.rook_moved = False
+                    #    elif t_board.queenSideCastle_black and not t_board.kingSideCastle_black and piece.position != (0,0):
+                    #        piece.rook_moved = True
+                    #    elif t_board.kingSideCastle_black and not t_board.queenSideCastle_black and piece.position != (0,7):
+                    #        piece.rook_moved = True
+                    #if piece.color == 'white':
+                    #    if t_board.queenSideCastle_white and t_board.kingSideCastle_white:
+                    #        piece.rook_moved = False
+                    #    elif t_board.queenSideCastle_white and not t_board.kingSideCastle_white and piece.position != (7,0):
+                    #        piece.rook_moved = True
+                    #    elif t_board.kingSideCastle_white and not t_board.queenSideCastle_white and piece.position != (7,7):
+                    #        piece.rook_moved = True
                 while len(legal_moves) != 0:
                     move = legal_moves.pop()
                     possible_move = ((row, col), move)
                     list_of_possible_moves.append(possible_move)
+
     return list_of_possible_moves
 
 

@@ -16,11 +16,12 @@ class bot:
     def random_move(self, ai_bool, board):
         if ai_bool:  # AI-Bot is active
             list_of_possible_moves = []
+            moves = board.legalMoves()
             for row in range(8):
                 for col in range(8):
                     piece = board.board[row][col]
                     if piece != None and piece.color == self.color:
-                        legal_moves = board.legalMoves()[(row,col)]
+                        legal_moves = moves[(row,col)]
                         print("Piece in pos:",row,col," has legal moves:", legal_moves)
                         while len(legal_moves) != 0:
                             move = legal_moves.pop()
