@@ -4,6 +4,7 @@ import pygame
 from board import board
 from visuals import drag_n_drop_visual, background, timer_white, timer_black, timer
 from aibot import bot
+from tests import FENtoBoard
 # This is a sample Python script.
 
 # Press ⌃R to execute it or replace it with your code.
@@ -16,6 +17,10 @@ if __name__ == '__main__':
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
  board = board()
+ #boardd, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
+ #enPassentSquareRow, enPassentSquareCol), \
+ #   halfMoveClock, fullMoveClock = FENtoBoard("8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34")
+ #board.board = boardd
 pygame.init()
 pygame.font.init()
 deneme_screen = pygame.display.set_mode((1024,712))
