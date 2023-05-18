@@ -84,7 +84,7 @@ class board :
         if isinstance(piece, Pawn):
             piece.possible_moves_pawn(self.board)
         elif isinstance(piece, King):
-            piece.possible_moves_king(self.board)
+            piece.possible_moves_king(self.board,self)
         elif isinstance(piece, Knight):
             piece.possible_moves_knight(self.board)
         elif isinstance(piece, Bishop):
@@ -157,6 +157,21 @@ class board :
         king.position = kingPos
 
         return False
+
+    def is_square_threatening_king(self, square, king):
+
+        for x in range(len(self.board)):
+            for y in range(len(self.board[0])):
+                if self.board[x][y] is not None and self.board[x][y].color != king.color:
+                    opponent_piece = self.board[x][y]
+
+                    if opponent_piece.possible_moves_list.__contains__(square):
+
+
+                        return True
+
+        return False
+
     def isLegal(self, start_pos, dest_pos):
         start_row, start_col = start_pos
         dest_row, dest_col = dest_pos
@@ -250,18 +265,152 @@ class board :
     def moveZa (self,sqSelected, sqDest):
 
        try:
+           row, col = sqSelected
+
+
            legalMoves = self.legalMoves()
            print(legalMoves[sqSelected])
            row, col = sqSelected
            piece = self.board[row][col]
+           if isinstance(piece,Rook):
+               piece.rook_moved = True
+
+
+
            row_dest, col_dest = sqDest
+
            if self.board[row][col] != None:
+
                 if legalMoves[sqSelected].__contains__(sqDest):
+
                     row_dest, col_dest = sqDest
                     self.board[row][col] = None
                     self.board[row_dest][col_dest] = piece
                     piece.position = (row_dest, col_dest)
                     self.Anzahlmoves+= 1
                     #print(self.Anzahlmoves)
+                    if isinstance(piece, King):
+
+                        if sqDest == (7, 6) and piece.king_moved == False:
+                            rook = self.board[7][7]
+                            self.board[7][7] = None
+                            self.board[7][5] = rook
+                            rook.position = (7, 5)
+
+                        elif sqDest == (7, 1) and piece.king_moved == False:
+                            rook = self.board[7][0]
+                            self.board[7][0] = None
+                            self.board[7][2] = rook
+                            rook.position = (7, 2)
+
+                        elif sqDest == (0, 6) and piece.king_moved == False:
+                            rook = self.board[0][7]
+                            self.board[0][7] = None
+                            self.board[0][5] = rook
+                            rook.position = (0, 5)
+
+                        elif sqDest == (0, 1) and piece.king_moved == False:
+                            rook = self.board[0][0]
+                            self.board[0][0] = None
+                            self.board[0][2] = rook
+                            rook.position = (0, 2)
+                        piece.king_moved = True
+
+
        except KeyError:
            return
+
+
+
+    def is_castling_free(self, sqSelected):
+        right_free = False
+        left_free = False
+        row, col = sqSelected
+
+
+        King = self.board[row][col]
+
+        for i in range (col+1,7):
+
+            if self.board[row][i] == None: #check if there is a piece inbetween
+                right_free = True
+
+                print("Kimsecikler yok")
+            else:
+                right_free = False
+                break
+        if right_free == True and (isinstance(self.board[row][7],Rook) == True) and self.board[row][7].rook_moved == False and King.king_moved == False: #if free and there is a rook
+
+            right_free = True
+        else:
+            right_free = False
+
+        for y in range (col-1,0,-1):
+            print("YYYYYYY", y)
+            if self.board[row][y] == None:
+                left_free = True
+                print("kimse yok sol")
+            else:
+                left_free = False
+                break
+
+        if left_free == True and isinstance(self.board[row][0],Rook) == True and self.board[row][0].rook_moved == False and King.king_moved == False:
+
+            left_free = True
+        else:
+            left_free = False
+
+        return (right_free, left_free)
+
+    def castling_checked(self,sqSelected):
+        right_castling = False
+        left_castling = False
+        row, col = sqSelected
+
+        King = self.board[row][col]
+        right, left = self.is_castling_free(sqSelected)
+        print("right= ",right, " left= " ,left)
+        (king_row, king_column) = King.position #real position
+        (king_row1, king_column1) = King.position
+
+        if right == True and King.color == 'white':
+            threatened_right_white = self.is_square_threatening_king((7,5),King)
+            print("threatened_right_white:",threatened_right_white)
+            if threatened_right_white == False:
+                threatened_right_white = self.is_square_threatening_king((7,6), King)
+
+            if threatened_right_white == True:
+                right = False
+        elif right == True and King.color == 'black':
+            threatened_right_black = self.is_square_threatening_king((0, 5), King)
+            if threatened_right_black == False:
+                threatened_right_black = self.is_square_threatening_king((0, 6), King)
+            if threatened_right_black == True:
+                right = False
+
+        if left == True and King.color == 'white':
+            threatened_left_white = self.is_square_threatening_king((7,3),King)
+            if threatened_left_white == False:
+                threatened_left_white = self.is_square_threatening_king((7, 2), King)
+                if threatened_left_white == False:
+                    threatened_left_white = self.is_square_threatening_king((7, 1), King)
+            if threatened_left_white == True:
+                left =False
+
+        elif left == True and King.color == 'black':
+            threatened_left_black = self.is_square_threatening_king((0,3),King)
+            if threatened_left_black == False:
+                threatened_left_black = self.is_square_threatening_king((0, 2), King)
+                if threatened_left_black == False:
+                    threatened_left_black = self.is_square_threatening_king((0, 1), King)
+            if threatened_left_black == True:
+                left = False
+
+
+
+
+        print((king_row, king_column + 2), "OLSUNDU")
+        print(King.possible_moves_list)
+        print("----------")
+        return (right,left)
+
