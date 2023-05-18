@@ -247,10 +247,15 @@ class board :
     def moveZa (self,sqSelected, sqDest):
 
        try:
+           row, col = sqSelected
+           if isinstance(self.board[row][col],King):
+                self.castling_checked(sqSelected)
            legalMoves = self.legalMoves()
            print(legalMoves[sqSelected])
            row, col = sqSelected
            piece = self.board[row][col]
+           if isinstance(piece,Rook):
+               piece.rook_moved = True
            row_dest, col_dest = sqDest
            if self.board[row][col] != None:
                 if legalMoves[sqSelected].__contains__(sqDest):
@@ -262,3 +267,85 @@ class board :
                     print(self.Anzahlmoves)
        except KeyError:
            return
+
+    def is_castling_free(self, sqSelected):
+        right_free = False
+        left_free = False
+        row, col = sqSelected
+
+
+        King = self.board[row][col]
+
+        for i in range (col+1,7):
+
+            if self.board[row][i] == None: #check if there is a piece inbetween
+                right_free = True
+
+                print("Kimsecikler yok")
+            else:
+                right_free = False
+                break
+        if right_free == True and (isinstance(self.board[row][7],Rook) == True) and self.board[row][7].rook_moved == False: #if free and there is a rook
+
+            right_free = True
+        else:
+            right_free = False
+
+        for y in range (col-1,0,-1):
+            print("YYYYYYY", y)
+            if self.board[row][y] == None:
+                left_free = True
+                print("kimse yok sol")
+            else:
+                left_free = False
+                break
+
+        if left_free == True and isinstance(self.board[row][0],Rook) == True and self.board[row][0].rook_moved == False:
+
+            left_free = True
+        else:
+            left_free = False
+
+        return (right_free, left_free)
+
+    def castling_checked(self,sqSelected):
+        right_castling = False
+        left_castling = False
+        row, col = sqSelected
+
+        King = self.board[row][col]
+        right, left = self.is_castling_free(sqSelected)
+        print("right= ",right, " left= " ,left)
+        (king_row, king_column) = King.position
+
+        '''if right == True:
+            King.position = (king_row, king_column+1)
+            right_castling = self.is_king_checked(King)
+            if right_castling == False:
+                King.position = (king_row, king_column + 2)
+                right_castling = self.is_king_checked(King)
+            King.position = (king_row, king_column)
+
+        if left == True:
+            King.position = (king_row, king_column - 1)
+            left_castling = self.is_king_checked(King)
+            if left_castling == False:
+                King.position = (king_row, king_column - 2)
+                left_castling = self.is_king_checked(King)      KİNG CHECKED BİTTİĞİNDE YORUMDAN ÇIKAR
+                if left_castling == False:
+                    King.position = (king_row, king_column - 3)
+                    left_castling = self.is_king_checked(King)
+            King.position = (king_row, king_column)'''
+
+        if right == True:
+            King.possible_moves_list.append((king_row, king_column + 2))
+            print((king_row, king_column + 2),"GİRDİİİİİ ZAAA")
+            print(King.possible_moves_list)
+            print("----------")
+        if left == True:
+            King.possible_moves_list.append((king_row, king_column - 3))
+
+        print((king_row, king_column + 2), "OLSUNDU")
+        print(King.possible_moves_list)
+        print("----------")
+

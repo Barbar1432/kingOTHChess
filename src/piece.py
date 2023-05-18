@@ -336,6 +336,7 @@ class Rook(piece):
         super().__init__(color, 'rook', 5)
         self.name = name
         self.position = (0, 0)
+        self.rook_moved = False
 
     def clear_list(self):
         self.possible_moves_list.clear()
