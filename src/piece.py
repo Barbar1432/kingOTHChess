@@ -182,12 +182,26 @@ class King(piece):
         super().__init__(color, 'king', 10)
         self.name = name
         self.position = (0, 0)
+        self.king_moved = False
 
     def clear_list(self):
         self.possible_moves_list.clear()
 
-    def possible_moves_king(self, board):
+    def possible_moves_king(self, board,brd):
         (row, column) = self.position
+
+        (right, left) = brd.castling_checked(self.position)
+        if right == True:
+            self.possible_moves_list.append((row, column + 2))
+            print((row, column + 2), "GİRDİİİİİ ZAAA")
+            print(self.possible_moves_list)
+            print("----------")
+        if left == True:
+            self.possible_moves_list.append((row, column - 3))
+
+
+
+
         try:
             self.possible_moves_list.append((row + 1, column))
         except IndexError:
