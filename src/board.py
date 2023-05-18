@@ -340,7 +340,7 @@ class board :
             if self.board[row][i] == None: #check if there is a piece inbetween
                 right_free = True
 
-                print("Kimsecikler yok")
+                #print("Kimsecikler yok")
             else:
                 right_free = False
                 break
@@ -351,10 +351,10 @@ class board :
             right_free = False
 
         for y in range (col-1,0,-1):
-            print("YYYYYYY", y)
+            #print("YYYYYYY", y)
             if self.board[row][y] == None:
                 left_free = True
-                print("kimse yok sol")
+                #print("kimse yok sol")
             else:
                 left_free = False
                 break
@@ -374,13 +374,13 @@ class board :
 
         King = self.board[row][col]
         right, left = self.is_castling_free(sqSelected)
-        print("right= ",right, " left= " ,left)
+        #print("right= ",right, " left= " ,left)
         (king_row, king_column) = King.position #real position
         (king_row1, king_column1) = King.position
 
         if right == True and King.color == 'white':
             threatened_right_white = self.is_square_threatening_king((7,5),King)
-            print("threatened_right_white:",threatened_right_white)
+            #print("threatened_right_white:",threatened_right_white)
             if threatened_right_white == False:
                 threatened_right_white = self.is_square_threatening_king((7,6), King)
 
@@ -414,8 +414,8 @@ class board :
 
 
 
-        print((king_row, king_column + 2), "OLSUNDU")
-        print(King.possible_moves_list)
-        print("----------")
+        #print((king_row, king_column + 2), "OLSUNDU")
+        #print(King.possible_moves_list)
+        #print("----------")
         return (right,left)
 

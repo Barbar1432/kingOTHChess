@@ -15,443 +15,391 @@ class TestBoard(unittest.TestCase):
         boardd, stell, fen, moves = allBoards()[0]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_A_1(self):
         boardd, stell, fen, moves = allBoards()[1]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
     def test_A_2(self):
         boardd, stell, fen, moves = allBoards()[2]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_N_1(self):
         boardd, stell, fen, moves = allBoards()[3]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_N_2(self):
         boardd, stell, fen, moves = allBoards()[4]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_L_1(self):
         boardd, stell, fen, moves = allBoards()[5]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_L_2(self):
         boardd, stell, fen, moves = allBoards()[6]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_G_1(self):
         boardd, stell, fen, moves = allBoards()[7]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_G_2(self):
         boardd, stell, fen, moves = allBoards()[8]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_O_1(self):
         boardd, stell, fen, moves = allBoards()[9]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_O_2(self):
         boardd, stell, fen, moves = allBoards()[10]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_J_1(self):
         boardd, stell, fen, moves = allBoards()[11]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_J_2(self):
         boardd, stell, fen, moves = allBoards()[12]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_H_1(self):
         boardd, stell, fen, moves = allBoards()[13]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_H_2(self):
         boardd, stell, fen, moves = allBoards()[14]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AA_1(self):
         boardd, stell, fen, moves = allBoards()[15]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        print(b_board.board)
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
-        print(legal_moves)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AA_2(self):
         boardd, stell, fen, moves = allBoards()[16]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AB_1(self):
         boardd, stell, fen, moves = allBoards()[17]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AB_2(self):
         boardd, stell, fen, moves = allBoards()[18]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_S_1(self):
         boardd, stell, fen, moves = allBoards()[19]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_S_2(self):
         boardd, stell, fen, moves = allBoards()[20]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AF_1(self):
         boardd, stell, fen, moves = allBoards()[21]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AF_2(self):
         boardd, stell, fen, moves = allBoards()[22]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_R_1(self):
         boardd, stell, fen, moves = allBoards()[23]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_R_2(self):
         boardd, stell, fen, moves = allBoards()[24]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_P_1(self):
         boardd, stell, fen, moves = allBoards()[25]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_P_2(self):
         boardd, stell, fen, moves = allBoards()[26]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AH_1(self):
         boardd, stell, fen, moves = allBoards()[27]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_AH_2(self):
         boardd, stell, fen, moves = allBoards()[28]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_F_1(self):
         boardd, stell, fen, moves = allBoards()[29]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_F_2(self):
         boardd, stell, fen, moves = allBoards()[30]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_T_1(self):
         boardd, stell, fen, moves = allBoards()[31]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_T_2(self):
         boardd, stell, fen, moves = allBoards()[32]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_U_1(self):
         boardd, stell, fen, moves = allBoards()[33]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_U_2(self):
         boardd, stell, fen, moves = allBoards()[34]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_U_3(self):
         boardd, stell, fen, moves = allBoards()[35]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_U_4(self):
         boardd, stell, fen, moves = allBoards()[36]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_V_1(self):
         boardd, stell, fen, moves = allBoards()[37]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_V_2(self):
         boardd, stell, fen, moves = allBoards()[38]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_K_1(self):
         boardd, stell, fen, moves = allBoards()[39]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_K_2(self):
         boardd, stell, fen, moves = allBoards()[40]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_X_1(self):
         boardd, stell, fen, moves = allBoards()[41]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_X_2(self):
         boardd, stell, fen, moves = allBoards()[42]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_C_1(self):
         boardd, stell, fen, moves = allBoards()[43]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_C_2(self):
         boardd, stell, fen, moves = allBoards()[44]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_M_1(self):
         boardd, stell, fen, moves = allBoards()[45]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_M_2(self):
         boardd, stell, fen, moves = allBoards()[46]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
-        print(legal_moves)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_Z_1(self):
         boardd, stell, fen, moves = allBoards()[47]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
     def test_Z_2(self):
         boardd, stell, fen, moves = allBoards()[48]
         t_board = testingBoard(boardd, stell, fen, moves)
         b_board = board()
-        b_board.board = t_board.board
-        b_board.positions()
-        legal_moves = returnAllMoves(b_board, t_board.color)
+        legal_moves = returnAllMoves(b_board, t_board)
+        # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
 # Can be used to test all board variations
@@ -485,19 +433,35 @@ class testingBoard():
         self.stellung = stell
         self.FEN_Notation = fen
         self.moves = moves
-        self.board, self.color, self.kingSideCastle_white, self.queenSideCastle_white, \
+        self.board, self.color, self.kingPosWhite, self.kingPosBlack, self.kingSideCastle_white, self.queenSideCastle_white, \
             self.kingSideCastle_black, self.queenSideCastle_black, \
             self.enPassent, self.halfMoveClock, self.fullMoveClock = FENtoBoard(fen)
 
-def returnAllMoves(board, color):
+def returnAllMoves(b_board, t_board):
+    b_board.board = t_board.board
+    b_board.blackKing.position = t_board.kingPosBlack
+    b_board.whiteKing.position = t_board.kingPosWhite
+    b_board.positions()
     list_of_possible_moves = []
-    if color == 'black':
-        board.Anzahlmoves += 1
-    moves = board.legalMoves()
+    if t_board.color == 'black':
+        b_board.Anzahlmoves += 1
+    moves = b_board.legalMoves()
     for row in range(8):
         for col in range(8):
-            piece = board.board[row][col]
-            if piece is not None and piece.color == color:
+            piece = b_board.board[row][col]
+            if piece is not None and piece.color == t_board.color:
+                if piece == Rook('black',"sK"):
+                    if (row, col) != (0, 0) or (row, col) != (0, 7):
+                        b_board.board[row][col].rook_played = True
+                if piece == Rook('white',"bK"):
+                    if (row, col) != (7, 0) or (row, col) != (7, 7):
+                        b_board.board[row][col].rook_played = True
+                if piece == King('black', "sSah"):
+                    if (row, col) != (0, 4):
+                        b_board.board[row][col].king_moved = True
+                if piece == King('white', "bSah"):
+                    if (row, col) != (7, 4):
+                        b_board.board[row][col].king_moved = True
                 legal_moves = moves[(row,col)]
                 while len(legal_moves) != 0:
                     move = legal_moves.pop()
@@ -515,6 +479,8 @@ def FENtoBoard(FEN):
     queensideCastleBlack = False
     kingsideCastleWhite = False
     queensideCastleWhite = False
+    kingPosWhite = ()
+    kingPosBlack = ()
     enPassentSquareCol = ()
     enPassentSquareRow = ()
     halfMoveClock = ()
@@ -544,6 +510,7 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'k':
             board[i][j] = (King('black', "sSah"))
+            kingPosBlack = (i, j)
             j += 1
         elif char == 'N':
             board[i][j] = (Knight('white', "bAt"))
@@ -559,6 +526,7 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'K':
             board[i][j] = (King('white', "bSah"))
+            kingPosWhite = (i, j)
             j += 1
         elif char == 'P':
             board[i][j] = (Pawn('white', "bPion"))
@@ -661,7 +629,7 @@ def FENtoBoard(FEN):
         elif char == '-':
             continue
             # Board is done
-    return board, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
+    return board, color, kingPosWhite, kingPosBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
         (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock
 
 def allBoards():
