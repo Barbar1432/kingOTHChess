@@ -10,6 +10,7 @@ class board :
          self.blackKing = King('black', "sSah")
          self.whiteKing.position =(7,4)
          self.blackKing.position=(0,4)
+         self.finished = False
          self.board = [
             [Rook('black',"sK"), Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), self.blackKing, Bishop('black',"sFil"),
              Knight('black',"sAt"), Rook('black',"sK")],
@@ -269,6 +270,12 @@ class board :
 
     def moveZa (self,sqSelected, sqDest):
 
+
+
+       if self.finished:
+           pygame.display.set_caption("GAME OVER")
+           return
+
        try:
            row, col = sqSelected
 
@@ -295,6 +302,9 @@ class board :
                     self.Anzahlmoves+= 1
                     #print(self.Anzahlmoves)
                     if isinstance(piece, King):
+                        if piece.position == (4,3) or piece.position == (3,3) or piece.position == (3,4) or piece.position == (4,4):
+                            self.finished = True
+
 
                         if sqDest == (7, 6) and piece.king_moved == False:
                             rook = self.board[7][7]
