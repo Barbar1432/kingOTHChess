@@ -36,12 +36,8 @@ dummy.color = 'black' # Decide bots color
 event_type = 0
 board.positions() #KALDIR
 while running:
-    if player_turn == -1 and dummy.ai_bool:
+    if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
         dummy.random_move(dummy.ai_bool, board)
-        player_turn *= -1
-        btimer.turn = not btimer.turn
-        wtimer.turn = not wtimer.turn
-
 
     for event in pygame.event.get():
         x, y = pygame.mouse.get_pos()
@@ -50,28 +46,22 @@ while running:
                 and (board.dislocation_count_row <= y <= 512 + board.dislocation_count_row):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and len(visuals.sec) == 0:
                 event_type = 1
-                # TODO: TEST IF WE ARE THE PLAYING PLAYER, IF NOT - NOT ALLOWED TO CLICK OR MOVE
-                # TODO: TEST IF WE ARE TRYING TO MOVE OUR COLORED PIECE, IF NOT - NOT ALLOWED TO CLICK OR MOVE
                 visuals.visualize(event_type, board)
                 event_type = -1
             if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
                 event_type = 0
                 # TODO: TEST IF THIS IS POSSIBLE MOVE IF NOT - NOT ALLOWED TO MOVE, RETURN BACK TO OLD POS
                 # TODO: Change the value of player_turn when one of the opponent makes the move
-
                 visuals.visualize(event_type, board)
-                player_turn *= -1
-                btimer.turn = not btimer.turn
-                wtimer.turn = not wtimer.turn
                 event_type = -1
         if event.type == pygame.QUIT:
             running = False
     background(deneme_screen, board)
-    timer_white(deneme_screen, wtimer)
-    if wtimer.turn:  # DECREASE WHITE PLAYERS TIME WHILE PLAYING
+    timer_white(deneme_screen, wtimer, board)
+    if board.Anzahlmoves % 2 == 0:  # DECREASE WHITE PLAYERS TIME WHILE PLAYING
         wtimer.time -= 1
-    timer_black(deneme_screen, btimer)
-    if btimer.turn:   # DECREASE BLACK PLAYERS TIME WHILE PLAYING
+    timer_black(deneme_screen, btimer, board)
+    if board.Anzahlmoves % 2 == 1:   # DECREASE BLACK PLAYERS TIME WHILE PLAYING
         btimer.time -= 1
     visuals.visualize(event_type, board)
     pygame.display.flip()
