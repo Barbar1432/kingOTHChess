@@ -9,7 +9,7 @@ def randomizer(moves_list):
 
 class bot:
     def __init__(self):
-        self.ai_bool = True  # AI-Bot active bool
+        self.ai_bool = False # AI-Bot active bool
         self.color = ()  # Make sure to decide the bots color beforehand
 
 

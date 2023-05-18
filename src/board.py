@@ -131,39 +131,35 @@ class board :
                 if (self.board[row][column] != None):
                     self.board[row][column].position = (row, column)
 
-    def is_king_threatened(self, start_pos,des_pos, king):
-            kingPos= king.position
-            row, column = start_pos
-            pinned = self.board[row][column]
-            self.board[row][column] = None
-            for x in range(len(self.board)):
-                for y in range(len(self.board[0])):
-                    if (self.board[x][y] is not None):
-                        if (self.board[x][y].color != king.color):
-                            sq =(x,y)
-                            self.callPossibleMoves(sq)
-                            #print(self.board[x][y].possible_moves_list)
-                            #print(kingPos)
-                            if (self.board[x][y].possible_moves_list.__contains__(kingPos)):
-                               self.board[row][column] = pinned
-                               return True
-            self.board[row][column] = pinned
-            return False
-    def is_king_checked(self,king):
-            kingPos= king.position
-            for x in range(len(self.board)):
-                for y in range(len(self.board[0])):
-                    if (self.board[x][y] is not None):
-                        if (self.board[x][y].color != king.color):
-                            if (self.board[x][y].possible_moves_list.__contains__(kingPos)):
-                               return True
-            return False
+    def is_king_threatened(self, start_pos, des_pos, king,):
+        kingPos = king.position
+        row, column = start_pos
+        a, b = des_pos
+        dest = self.board[a][b]
+        pinned = self.board[row][column]
+        if(start_pos==kingPos):
+            king.position =des_pos
+        self.board[row][column] = None
+        self.board[a][b] = pinned
+        for x in range(len(self.board)):
+            for y in range(len(self.board[0])):
+                if self.board[x][y] is not None and self.board[x][y].color != king.color:
+                    sq = (x, y)
+                    self.callPossibleMoves(sq)
+                    if self.board[x][y].possible_moves_list.__contains__(king.position):
+                        self.board[row][column] = pinned
+                        self.board[a][b] = dest
+                        king.position = kingPos
+                        return True
 
+        self.board[row][column] = pinned
+        self.board[a][b] = dest
+        king.position = kingPos
+
+        return False
     def isLegal(self, start_pos, dest_pos):
         start_row, start_col = start_pos
         dest_row, dest_col = dest_pos
-
-
         if not (0 <= start_row < len(self.board) and 0 <= start_col < len(self.board[0])):
             return False
         if not (0 <= dest_row < len(self.board) and 0 <= dest_col < len(self.board[0])):
@@ -172,10 +168,11 @@ class board :
             return False
         if (self.Anzahlmoves % 2 == 1 and self.board[start_row][start_col].color != "black"):
             return False
+
         start = self.board[start_row][start_col] # start is a piece
 
         dest = self.board[dest_row][dest_col] # dest can either be a square (None) or a piec
-
+        self.callPossibleMoves(start_pos)
         if start is None : # look if there actually is a piece on the start square
             return False
         if not start.possible_moves_list.__contains__(dest_pos) : # look if the destination is a possible move for the piece
@@ -185,11 +182,8 @@ class board :
                 return False
              if start.color == "white" and dest.color == "white":
                  return False
-        if (self.is_king_threatened(start_pos,dest_pos, self.whiteKing)):
-            return False
         else :
             return True
-
     def bewertungsFunktion(self):
         whiteCurrentPieces = []
         blackCurrentPieces = []
@@ -235,8 +229,9 @@ class board :
                        self.callPossibleMoves(pos)
                        legalMoves[self.board[row][column].position] = []
                        for pM in self.board[row][column].possible_moves_list:
-                            if(self.isLegal(pos,pM)):
-                                 legalMoves[self.board[row][column].position].append(pM)
+                           if (self.isLegal(pos, pM)):
+                               if(self.is_king_threatened(pos,pM,self.whiteKing)== False):
+                                   legalMoves[self.board[row][column].position].append(pM)
                    if self.Anzahlmoves % 2 == 1:
                        if (self.board[row][column].color == "white"):  #sıra siyahta
                            continue
@@ -245,15 +240,17 @@ class board :
                        self.callPossibleMoves(pos)
                        legalMoves[self.board[row][column].position] = []
                        for pM in self.board[row][column].possible_moves_list:
-                           if (self.isLegal(pos, pM)):
+                        if (self.isLegal(pos, pM)):
+                           if (self.is_king_threatened(pos, pM, self.blackKing) == False):
                                legalMoves[self.board[row][column].position].append(pM)
+
         return legalMoves
 
     def moveZa (self,sqSelected, sqDest):
 
        try:
            legalMoves = self.legalMoves()
-           #print(legalMoves[sqSelected])
+           print(legalMoves[sqSelected])
            row, col = sqSelected
            piece = self.board[row][col]
            row_dest, col_dest = sqDest
