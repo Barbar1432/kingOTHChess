@@ -27,7 +27,7 @@ def zug_generator_starting():
     move = randomizer(list_of_possible_moves)
 def zug_generator_middle():
     boardmiddle = board()
-    boardmid, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
+    boardmid, color, k1, k2, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
         halfMoveClock, fullMoveClock = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
     #print(boardmid, color)
     boardmiddle.board = boardmid
@@ -50,7 +50,7 @@ def zug_generator_middle():
 
 def zug_generator_end():
     boardend = board()
-    boardend_d, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
+    boardend_d, color, k1, k2, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
         halfMoveClock, fullMoveClock = FENtoBoard("r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w Qkq - 0 11")
     #print(boardmid, color)
     boardend.board = boardend_d
@@ -74,9 +74,9 @@ def zug_generator_end():
 
 #(timeit.timeit(stmt='', setup='', timer=time.perf_counter, number=1, globals=None))
 array1 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ import zug_generator_starting', repeat=5, number=1))
-array4 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ import zug_generator_starting', repeat=100, number=1))
-array2 = (timeit.repeat(stmt='zug_generator_middle()', setup='from __main__ import zug_generator_middle', repeat=100, number=1))
-array3 = timeit.repeat(stmt='zug_generator_end()', setup='from __main__ import zug_generator_end', repeat=100, number=1)
+array4 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ import zug_generator_starting', repeat=1000, number=1))
+array2 = (timeit.repeat(stmt='zug_generator_middle()', setup='from __main__ import zug_generator_middle', repeat=1000, number=1))
+array3 = timeit.repeat(stmt='zug_generator_end()', setup='from __main__ import zug_generator_end', repeat=1000, number=1)
 x = range(1, 101)
 fig, axs = plt.subplots(2, 2)
 axs[0, 0].plot(x, array4)
