@@ -159,30 +159,18 @@ class board :
         return False
 
     def is_square_threatening_king(self, square, king):
-        king_pos = king.position
-        row, column = square
-        isit = False
-
-
-        king.position = square
-
 
         for x in range(len(self.board)):
             for y in range(len(self.board[0])):
                 if self.board[x][y] is not None and self.board[x][y].color != king.color:
                     opponent_piece = self.board[x][y]
 
-                    if opponent_piece.possible_moves_list.__contains__((king_pos)):
-
-                        king.position = king_pos
-                        isit =  True
+                    if opponent_piece.possible_moves_list.__contains__(square):
 
 
+                        return True
 
-        king.position = king_pos
-
-
-        return isit
+        return False
 
     def isLegal(self, start_pos, dest_pos):
         start_row, start_col = start_pos
@@ -387,6 +375,7 @@ class board :
 
         if right == True and King.color == 'white':
             threatened_right_white = self.is_square_threatening_king((7,5),King)
+            print("threatened_right_white:",threatened_right_white)
             if threatened_right_white == False:
                 threatened_right_white = self.is_square_threatening_king((7,6), King)
 
