@@ -232,42 +232,40 @@ class board :
 
         bewertung = (whitePoints - blackPoints)*0.10
         return bewertung
-    def legalMoves (self):
-        legalMoves = {}
-        for row in range(len(self.board)):
-            for column in range(len(self.board[0])):
-                if (self.board[row][column] != None):
-                   if self.Anzahlmoves % 2==0: #sıra beyazda
-                       if (self.board[row][column].color == "black "):
-                           continue
-                       a,b =self.board[row][column].position
-                       pos= (a,b)
-                       # print("Piece:", self.board[row][column].name, pos, "is white.")
-                       self.callPossibleMoves(pos)
-                       legalMoves[self.board[row][column].position] = []
-                       for pM in self.board[row][column].possible_moves_list:
-                           # print("isLegal move:", (pos,pM),":", self.isLegal(pos,pM))
-                           if (self.isLegal(pos, pM)):
-                               # print("isthreatened:", self.is_king_threatened(pos,pM,self.whiteKing))
-                               if(self.is_king_threatened(pos,pM,self.whiteKing)== False):
-                                   # print("Move:", pos, pM, "is Legal!")
-                                   legalMoves[self.board[row][column].position].append(pM)
-                   if self.Anzahlmoves % 2 == 1:
-                       if (self.board[row][column].color == "white"):  #sıra siyahta
-                           continue
-                       a, b = self.board[row][column].position
-                       pos = (a, b)
-                       # print("Piece:", self.board[row][column].name, pos, "is black.")
-                       self.callPossibleMoves(pos)
-                       legalMoves[self.board[row][column].position] = []
-                       for pM in self.board[row][column].possible_moves_list:
-                           # print("isLegal move:", (pos,pM),":", self.isLegal(pos,pM))
-                           if (self.isLegal(pos, pM)):
-                               #print("isthreatened:", self.is_king_threatened(pos,pM,self.whiteKing))
-                               if (self.is_king_threatened(pos, pM, self.blackKing) == False):
-                                   legalMoves[self.board[row][column].position].append(pM)
 
-        return legalMoves
+    def legalMoves(self):
+        legalMoves = {}
+        if self.Anzahlmoves % 2 == 0:  # sıra beyazda
+            for row in range(len(self.board)):
+                for column in range(len(self.board[0])):
+                    if (self.board[row][column] != None):
+
+                        if (self.board[row][column].color == "black"):
+                            continue
+                        a, b = self.board[row][column].position
+                        pos = (a, b)
+                        self.callPossibleMoves(pos)
+                        legalMoves[self.board[row][column].position] = []
+                        for pM in self.board[row][column].possible_moves_list:
+                            if (self.isLegal(pos, pM)):
+                                if (self.is_king_threatened(pos, pM, self.whiteKing) == False):
+                                    legalMoves[self.board[row][column].position].append(pM)
+            return legalMoves
+        if self.Anzahlmoves % 2 == 1:  # sıra beyazda
+            for row in range(len(self.board)):
+                for column in range(len(self.board[0])):
+                    if (self.board[row][column] != None):
+                        if (self.board[row][column].color == "white"):  # sıra siyahta
+                            continue
+                        a, b = self.board[row][column].position
+                        pos = (a, b)
+                        self.callPossibleMoves(pos)
+                        legalMoves[self.board[row][column].position] = []
+                        for pM in self.board[row][column].possible_moves_list:
+                            if (self.isLegal(pos, pM)):
+                                if (self.is_king_threatened(pos, pM, self.blackKing) == False):
+                                    legalMoves[self.board[row][column].position].append(pM)
+            return legalMoves
 
     def moveZa (self,sqSelected, sqDest):
 
