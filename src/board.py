@@ -232,42 +232,40 @@ class board :
 
         bewertung = (whitePoints - blackPoints)*0.10
         return bewertung
-    def legalMoves (self):
-        legalMoves = {}
-        for row in range(len(self.board)):
-            for column in range(len(self.board[0])):
-                if (self.board[row][column] != None):
-                   if self.Anzahlmoves % 2==0: #sıra beyazda
-                       if (self.board[row][column].color == "black "):
-                           continue
-                       a,b =self.board[row][column].position
-                       pos= (a,b)
-                       # print("Piece:", self.board[row][column].name, pos, "is white.")
-                       self.callPossibleMoves(pos)
-                       legalMoves[self.board[row][column].position] = []
-                       for pM in self.board[row][column].possible_moves_list:
-                           # print("isLegal move:", (pos,pM),":", self.isLegal(pos,pM))
-                           if (self.isLegal(pos, pM)):
-                               # print("isthreatened:", self.is_king_threatened(pos,pM,self.whiteKing))
-                               if(self.is_king_threatened(pos,pM,self.whiteKing)== False):
-                                   # print("Move:", pos, pM, "is Legal!")
-                                   legalMoves[self.board[row][column].position].append(pM)
-                   if self.Anzahlmoves % 2 == 1:
-                       if (self.board[row][column].color == "white"):  #sıra siyahta
-                           continue
-                       a, b = self.board[row][column].position
-                       pos = (a, b)
-                       # print("Piece:", self.board[row][column].name, pos, "is black.")
-                       self.callPossibleMoves(pos)
-                       legalMoves[self.board[row][column].position] = []
-                       for pM in self.board[row][column].possible_moves_list:
-                           # print("isLegal move:", (pos,pM),":", self.isLegal(pos,pM))
-                           if (self.isLegal(pos, pM)):
-                               #print("isthreatened:", self.is_king_threatened(pos,pM,self.whiteKing))
-                               if (self.is_king_threatened(pos, pM, self.blackKing) == False):
-                                   legalMoves[self.board[row][column].position].append(pM)
 
-        return legalMoves
+    def legalMoves(self):
+        legalMoves = {}
+        if self.Anzahlmoves % 2 == 0:  # sıra beyazda
+            for row in range(len(self.board)):
+                for column in range(len(self.board[0])):
+                    if (self.board[row][column] != None):
+
+                        if (self.board[row][column].color == "black"):
+                            continue
+                        a, b = self.board[row][column].position
+                        pos = (a, b)
+                        self.callPossibleMoves(pos)
+                        legalMoves[self.board[row][column].position] = []
+                        for pM in self.board[row][column].possible_moves_list:
+                            if (self.isLegal(pos, pM)):
+                                if (self.is_king_threatened(pos, pM, self.whiteKing) == False):
+                                    legalMoves[self.board[row][column].position].append(pM)
+            return legalMoves
+        if self.Anzahlmoves % 2 == 1:  # sıra beyazda
+            for row in range(len(self.board)):
+                for column in range(len(self.board[0])):
+                    if (self.board[row][column] != None):
+                        if (self.board[row][column].color == "white"):  # sıra siyahta
+                            continue
+                        a, b = self.board[row][column].position
+                        pos = (a, b)
+                        self.callPossibleMoves(pos)
+                        legalMoves[self.board[row][column].position] = []
+                        for pM in self.board[row][column].possible_moves_list:
+                            if (self.isLegal(pos, pM)):
+                                if (self.is_king_threatened(pos, pM, self.blackKing) == False):
+                                    legalMoves[self.board[row][column].position].append(pM)
+            return legalMoves
 
     def moveZa (self,sqSelected, sqDest):
 
@@ -342,7 +340,7 @@ class board :
             if self.board[row][i] == None: #check if there is a piece inbetween
                 right_free = True
 
-                print("Kimsecikler yok")
+                #print("Kimsecikler yok")
             else:
                 right_free = False
                 break
@@ -353,10 +351,10 @@ class board :
             right_free = False
 
         for y in range (col-1,0,-1):
-            print("YYYYYYY", y)
+            #print("YYYYYYY", y)
             if self.board[row][y] == None:
                 left_free = True
-                print("kimse yok sol")
+                #print("kimse yok sol")
             else:
                 left_free = False
                 break
@@ -376,13 +374,13 @@ class board :
 
         King = self.board[row][col]
         right, left = self.is_castling_free(sqSelected)
-        print("right= ",right, " left= " ,left)
+        #print("right= ",right, " left= " ,left)
         (king_row, king_column) = King.position #real position
         (king_row1, king_column1) = King.position
 
         if right == True and King.color == 'white':
             threatened_right_white = self.is_square_threatening_king((7,5),King)
-            print("threatened_right_white:",threatened_right_white)
+            #print("threatened_right_white:",threatened_right_white)
             if threatened_right_white == False:
                 threatened_right_white = self.is_square_threatening_king((7,6), King)
 
@@ -416,8 +414,8 @@ class board :
 
 
 
-        print((king_row, king_column + 2), "OLSUNDU")
-        print(King.possible_moves_list)
-        print("----------")
+        #print((king_row, king_column + 2), "OLSUNDU")
+        #print(King.possible_moves_list)
+        #print("----------")
         return (right,left)
 

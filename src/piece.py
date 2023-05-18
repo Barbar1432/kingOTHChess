@@ -193,9 +193,9 @@ class King(piece):
         (right, left) = brd.castling_checked(self.position)
         if right == True:
             self.possible_moves_list.append((row, column + 2))
-            print((row, column + 2), "GİRDİİİİİ ZAAA")
-            print(self.possible_moves_list)
-            print("----------")
+            #print((row, column + 2), "GİRDİİİİİ ZAAA")
+            #print(self.possible_moves_list)
+            #print("----------")
         if left == True:
             self.possible_moves_list.append((row, column - 3))
 
