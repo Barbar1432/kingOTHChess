@@ -428,4 +428,3 @@ class board :
         #print(King.possible_moves_list)
         #print("----------")
         return (right,left)
-
