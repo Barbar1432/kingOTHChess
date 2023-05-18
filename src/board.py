@@ -177,11 +177,12 @@ class board :
             return False
         if not start.possible_moves_list.__contains__(dest_pos) : # look if the destination is a possible move for the piece
             return False
-        if dest is not None:  # look if there actually is a piece on the start square
-             if start.color=="black" and dest.color== "black":
-                return False
-             if start.color == "white" and dest.color == "white":
-                 return False
+
+        if dest is not None:
+               if start.color=="black" and dest.color== "white":
+                  return True
+               if start.color == "white" and dest.color == "black":
+                    return True
         else :
             return True
     def bewertungsFunktion(self):
@@ -240,9 +241,9 @@ class board :
                        self.callPossibleMoves(pos)
                        legalMoves[self.board[row][column].position] = []
                        for pM in self.board[row][column].possible_moves_list:
-                        if (self.isLegal(pos, pM)):
-                           if (self.is_king_threatened(pos, pM, self.blackKing) == False):
-                               legalMoves[self.board[row][column].position].append(pM)
+                           if (self.isLegal(pos, pM)):
+                               if (self.is_king_threatened(pos, pM, self.blackKing) == False):
+                                   legalMoves[self.board[row][column].position].append(pM)
 
         return legalMoves
 
