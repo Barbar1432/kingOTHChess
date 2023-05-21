@@ -28,8 +28,12 @@ class bot:
                             possible_move = ((row,col),move)
                             list_of_possible_moves.append(possible_move)
 
-            move = randomizer(list_of_possible_moves)
-            print("I choose you pikachu:", move)
-            sq, dest = move
-            board.moveZa(sq, dest)
+            if len(list_of_possible_moves) != 0:
+                move = randomizer(list_of_possible_moves)
+                print("I choose you pikachu:", move)
+                sq, dest = move
+                board.moveZa(sq, dest)
+            else:
+                board.finished = True
+                print("No more possible moves")
 

@@ -1,33 +1,54 @@
-
 import pygame
 import pygame.gfxdraw
 from piece import piece
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
+import numpy as np
 class board :
     def __init__(self):
+         self.whiteKing = King("white","bSah")
+         self.blackKing = King("black", "sSah")
          self.Anzahlmoves = 0
-         self.whiteKing =King('white', "bSah")
-         self.blackKing = King('black', "sSah")
          self.whiteKing.position =(7,4)
          self.blackKing.position=(0,4)
          self.finished = False
+         self.mapping =piece_mapping = {
+              "sSah": 1111,
+             "bSah": 2111,
+            "sK": 1011,
+            "bK": 2011,
+            "sAt": 1001,
+             "bAt": 2001,
+            "sFil": 1010,
+             "bFil": 2010,
+             "sV": 1110,
+             "bV": 2110,
+            "sPion": 1000,
+            "bPion": 2000
+}
          self.board = [
-            [Rook('black',"sK"), Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), self.blackKing, Bishop('black',"sFil"),
+            [ Rook('black', "sK"),Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), self.blackKing, Bishop('black',"sFil"),
              Knight('black',"sAt"), Rook('black',"sK")],
             [Pawn('black',"sPion") for _ in range(8)],
-            [None] * 8,
-            [None] * 8,
-            [None] * 8,
-            [None] * 8,
+            [None] * 8, [None] * 8,[None] * 8,[None] * 8,
             [Pawn('white',"bPion") for _ in range(8)],
             [Rook('white', "bK"), Knight('white', "bAt"), Bishop('white', "bFil"), Queen('white',"bV"),
-             self.whiteKing, Bishop('white',"bFil"),
-             Knight('white', "bAt"), Rook('white', "bK")] ]
+             self.whiteKing, Bishop('white',"bFil"), Knight('white', "bAt"), Rook('white', "bK")] ]
+         self.boardInteger = np.array([
+             [1011, 1001, 1010, 1110, 1111, 1010, 1001, 1011],[1000 for _ in range(8)],
+             [1600 for _ in range(8)],
+             [1600 for _ in range(8)],
+             [1600 for _ in range(8)],
+             [1600 for _ in range(8)],
+             [2000 for _ in range(8)],
+             [2011, 2001, 2010, 2110, 2111, 2010, 2001, 2011]])
          self.square_size = 64
          self.screen_size = (self.square_size * 8, self.square_size * 8)
          self.screen = pygame.display.set_mode(self.screen_size)
          self.dislocation_count_row = 100  # Dikey
          self.dislocation_count_col = 128  # Yatay
+
+
+
     def draw_board(self, booly, name, clickedpos):
          colors = [(255, 206, 158), (209, 139, 71)]
 
@@ -60,7 +81,19 @@ class board :
                                                      3 * self.square_size + self.dislocation_count_row,
                                                      10, 2 * self.square_size), trans_color)
          if booly: # Drag and drop booly
-
+             # Helping bubbles for possible moves
+             (row, col) = clickedpos
+             clickedpiece = self.board[row][col]
+             self.callPossibleMoves(clickedpos)
+             list = clickedpiece.possible_moves_list
+             for bubble in list:
+                 if (self.isLegal(clickedpos, bubble)):
+                     bub_row, bub_col = bubble
+                     pygame.draw.circle(self.screen, (144, 238, 144),
+                                        (bub_col * self.square_size + self.dislocation_count_col + 32,
+                                         bub_row * self.square_size + self.dislocation_count_row + 32),
+                                        10)
+             # Dragged piece animation
              clicked_image = pygame.image.load('images/' + name + '.png')
              (row,col) = clickedpos
              transparent_screen = pygame.Surface((self.square_size, self.square_size))
@@ -95,51 +128,20 @@ class board :
         elif isinstance(piece, Queen):
             piece.possible_moves_queen(self.board)
 
-
-    def move(self, sqSelected, sqDest):
-        if(self.is_king_threatened(sqSelected,sqDest,self.whiteKing)):
-             return
-        row, col = sqSelected
-        piece = self.board[row][col]
-        if self.board[row][col]!= None:
-             piece.clear_list()
-        if isinstance(piece,Pawn):
-            piece.possible_moves_pawn(self.board)
-        elif isinstance(piece,King):
-            piece.possible_moves_king(self.board)
-        elif isinstance(piece, Knight):
-            piece.possible_moves_knight(self.board)
-        elif isinstance(piece, Bishop):
-            piece.possible_moves_bishop(self.board)
-        elif isinstance(piece, Rook):
-            piece.possible_moves_rook(self.board)
-        elif isinstance(piece, Queen):
-            piece.possible_moves_queen(self.board)
-
-        #print(self.board[row][col].possible_moves_list)
-        #print(self.is_king_threatened(sqSelected, sqDest, self.whiteKing))
-
-        row_dest, col_dest = sqDest
-        if self.isLegal(sqSelected,sqDest): #(row_dest, col_dest) in self.board[row][col].possible_moves_list and
-            self.board[row][col] = None
-            self.board[row_dest][col_dest] = piece
-            piece.position = (row_dest, col_dest)
-
-        print(self.bewertungsFunktion())
     def positions(self):
         for row in range(len(self.board)):
             for column in range(len(self.board[0])):
                 if (self.board[row][column] != None):
                     self.board[row][column].position = (row, column)
 
-    def is_king_threatened(self, start_pos, des_pos, king,):
+    def is_king_threatened(self, start_pos, des_pos, king, ):
         kingPos = king.position
         row, column = start_pos
         a, b = des_pos
         dest = self.board[a][b]
         pinned = self.board[row][column]
-        if(start_pos==kingPos):
-            king.position =des_pos
+        if (start_pos == kingPos):
+            king.position = des_pos
         self.board[row][column] = None
         self.board[a][b] = pinned
         for x in range(len(self.board)):
@@ -237,35 +239,29 @@ class board :
     def legalMoves(self):
         legalMoves = {}
         if self.Anzahlmoves % 2 == 0:  # sıra beyazda
-            for row in range(len(self.board)):
-                for column in range(len(self.board[0])):
-                    if (self.board[row][column] != None):
+            positions = np.where(self.boardInteger >= 2000)
 
-                        if (self.board[row][column].color == "black"):
-                            continue
-                        a, b = self.board[row][column].position
-                        pos = (a, b)
-                        self.callPossibleMoves(pos)
-                        legalMoves[self.board[row][column].position] = []
-                        for pM in self.board[row][column].possible_moves_list:
-                            if (self.isLegal(pos, pM)):
-                                if (self.is_king_threatened(pos, pM, self.whiteKing) == False):
-                                    legalMoves[self.board[row][column].position].append(pM)
+            row_indices, col_indices = positions
+
+            for row, col in zip(row_indices, col_indices):
+                pos = (row, col)
+                #print(pos)
+                self.callPossibleMoves(pos)
+                legalMoves[pos] = []
+                for pM in self.board[row][col].possible_moves_list:
+                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.whiteKing) == False):
+                        legalMoves[self.board[row][col].position].append(pM)
             return legalMoves
-        if self.Anzahlmoves % 2 == 1:  # sıra beyazda
-            for row in range(len(self.board)):
-                for column in range(len(self.board[0])):
-                    if (self.board[row][column] != None):
-                        if (self.board[row][column].color == "white"):  # sıra siyahta
-                            continue
-                        a, b = self.board[row][column].position
-                        pos = (a, b)
-                        self.callPossibleMoves(pos)
-                        legalMoves[self.board[row][column].position] = []
-                        for pM in self.board[row][column].possible_moves_list:
-                            if (self.isLegal(pos, pM)):
-                                if (self.is_king_threatened(pos, pM, self.blackKing) == False):
-                                    legalMoves[self.board[row][column].position].append(pM)
+        if self.Anzahlmoves % 2 == 1:
+            positions = np.where(self.boardInteger < 1600)
+            row_indices, col_indices = positions
+            for row, col in zip(row_indices, col_indices):
+                pos = (row, col)
+                self.callPossibleMoves(pos)
+                legalMoves[pos] = []
+                for pM in self.board[row][col].possible_moves_list:
+                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.blackKing) == False):
+                        legalMoves[self.board[row][col].position].append(pM)
             return legalMoves
 
     def moveZa (self,sqSelected, sqDest):
@@ -292,12 +288,14 @@ class board :
            row_dest, col_dest = sqDest
 
            if self.board[row][col] != None:
-
                 if legalMoves[sqSelected].__contains__(sqDest):
 
                     row_dest, col_dest = sqDest
                     self.board[row][col] = None
                     self.board[row_dest][col_dest] = piece
+                    self.boardInteger[row][col] = 1600
+                    self.boardInteger[row_dest][col_dest] = self.mapping[piece.name]
+                    print(self.boardInteger)
                     piece.position = (row_dest, col_dest)
                     self.Anzahlmoves+= 1
                     #print(self.Anzahlmoves)
