@@ -36,7 +36,7 @@ btimer.turn = False
 
 dummy = bot() # Welcome to life dummy
 dummy.ai_bool = False # Decide if you want to play against a bot
-dummy.color = 'black' # Decide bots color
+dummy.color = False  # Decide bots color
 
 event_type = 0
 board.positions() #KALDIR
