@@ -77,7 +77,7 @@ array1 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ im
 array4 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ import zug_generator_starting', repeat=1000, number=1))
 array2 = (timeit.repeat(stmt='zug_generator_middle()', setup='from __main__ import zug_generator_middle', repeat=1000, number=1))
 array3 = timeit.repeat(stmt='zug_generator_end()', setup='from __main__ import zug_generator_end', repeat=1000, number=1)
-x = range(1, 101)
+x = range(1, 1001)
 fig, axs = plt.subplots(2, 2)
 axs[0, 0].plot(x, array4)
 axs[0, 0].set_title('Starting board')
