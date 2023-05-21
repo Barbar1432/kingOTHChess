@@ -81,7 +81,19 @@ class board :
                                                      3 * self.square_size + self.dislocation_count_row,
                                                      10, 2 * self.square_size), trans_color)
          if booly: # Drag and drop booly
-
+             # Helping bubbles for possible moves
+             (row, col) = clickedpos
+             clickedpiece = self.board[row][col]
+             self.callPossibleMoves(clickedpos)
+             list = clickedpiece.possible_moves_list
+             for bubble in list:
+                 if (self.isLegal(clickedpos, bubble)):
+                     bub_row, bub_col = bubble
+                     pygame.draw.circle(self.screen, (144, 238, 144),
+                                        (bub_col * self.square_size + self.dislocation_count_col + 32,
+                                         bub_row * self.square_size + self.dislocation_count_row + 32),
+                                        10)
+             # Dragged piece animation
              clicked_image = pygame.image.load('images/' + name + '.png')
              (row,col) = clickedpos
              transparent_screen = pygame.Surface((self.square_size, self.square_size))
@@ -233,7 +245,7 @@ class board :
 
             for row, col in zip(row_indices, col_indices):
                 pos = (row, col)
-                print(pos)
+                #print(pos)
                 self.callPossibleMoves(pos)
                 legalMoves[pos] = []
                 for pM in self.board[row][col].possible_moves_list:

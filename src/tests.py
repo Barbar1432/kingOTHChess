@@ -1,5 +1,5 @@
 import unittest
-
+import numpy as np
 import board
 import piece
 #import main
@@ -402,31 +402,6 @@ class TestBoard(unittest.TestCase):
         # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
-# Can be used to test all board variations
-#    def test_all_boards(self):
-#        test_boards = allBoards()
-#        for i in range(len(test_boards)):
-#            legal_move_list = []
-#            b_board = board()
-#            t_board = test_boards[i]
-#            print("Testing:", t_board.name, t_board.stellung)
-#            b_board.board = t_board.board
-#            print("Should be: ", t_board.moves)
-#            move_list = (b_board.possibleMoves(t_board.color))
-#            print(move_list)
-#            while len(move_list)!= 0:
-#                move = move_list.pop()
-#                moveSq, moveDest = move
-#                print("MoveSq = ",moveSq)
-#                print("MoveDest = ", moveDest)
-#                if b_board.isLegal(moveSq, moveDest): # islegal out of board'a bakmadığı için çalışmıyor şuan
-#                    print("Move:",move,"is Legal")
-#                    legal_move_list.append(move)
-#            print(legal_move_list)
-#
-#            self.assertEqual(len(legal_move_list), t_board.moves)
-
-
 class testingBoard():
     def __init__(self, name, stell, fen, moves):
         self.name = name
@@ -435,10 +410,12 @@ class testingBoard():
         self.moves = moves
         self.board, self.color, self.kingPosWhite, self.kingPosBlack, self.kingSideCastle_white, self.queenSideCastle_white, \
             self.kingSideCastle_black, self.queenSideCastle_black, \
-            self.enPassent, self.halfMoveClock, self.fullMoveClock = FENtoBoard(fen)
+            self.enPassent, self.halfMoveClock, self.fullMoveClock, self.hilfsboard = FENtoBoard(fen)
 
 def returnAllMoves(b_board, t_board):
     b_board.board = t_board.board
+    b_board.boardInteger = np.array(t_board.hilfsboard)
+    #print(b_board.boardInteger)
     b_board.blackKing.position = t_board.kingPosBlack
     b_board.whiteKing.position = t_board.kingPosWhite
     b_board.positions()
@@ -451,35 +428,6 @@ def returnAllMoves(b_board, t_board):
             piece = b_board.board[row][col]
             if piece is not None and piece.color == t_board.color:
                 legal_moves = moves[(row,col)]
-                if isinstance(piece, Rook):
-                    if piece.color == 'black':
-                        if piece.position == (0,0):
-                            piece.rook_moved = False
-                        elif piece.position == (0,7):
-                            piece.rook_moved = False
-                        else:
-                            piece.rook_moved = True
-                    if piece.color == 'white':
-                        if piece.position == (7,0):
-                            piece.rook_moved = False
-                        elif piece.position == (7,7):
-                            piece.rook_moved = False
-                        else:
-                            piece.rook_moved = True
-                    #if piece.color == 'black':
-                    #    if t_board.queenSideCastle_black and t_board.kingSideCastle_black:
-                    #        piece.rook_moved = False
-                    #    elif t_board.queenSideCastle_black and not t_board.kingSideCastle_black and piece.position != (0,0):
-                    #        piece.rook_moved = True
-                    #    elif t_board.kingSideCastle_black and not t_board.queenSideCastle_black and piece.position != (0,7):
-                    #        piece.rook_moved = True
-                    #if piece.color == 'white':
-                    #    if t_board.queenSideCastle_white and t_board.kingSideCastle_white:
-                    #        piece.rook_moved = False
-                    #    elif t_board.queenSideCastle_white and not t_board.kingSideCastle_white and piece.position != (7,0):
-                    #        piece.rook_moved = True
-                    #    elif t_board.kingSideCastle_white and not t_board.queenSideCastle_white and piece.position != (7,7):
-                    #        piece.rook_moved = True
                 while len(legal_moves) != 0:
                     move = legal_moves.pop()
                     possible_move = ((row, col), move)
@@ -503,6 +451,7 @@ def FENtoBoard(FEN):
     enPassentSquareRow = ()
     halfMoveClock = ()
     fullMoveClock = ()
+    rookPositions = []
     # [L1]/[L2]/[L3]/[L4]/[L5]/[L6]/[L7]/[L8] [Active Color] [Castling Availability]
     # [En Passant target square - Piyon önceki el 2 kare ilerledi]
     while FEN != "":
@@ -522,6 +471,8 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'r':
             board[i][j] = (Rook('black',"sK"))
+            #print("Found a black rook: ", (i,j))
+            rookPositions.append((i,j))
             j += 1
         elif char == 'q':
             board[i][j] = (Queen('black',"sV"))
@@ -538,6 +489,8 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'R':
             board[i][j] = (Rook('white', "bK"))
+            #print("Found a white rook: ", (i, j))
+            rookPositions.append((i, j))
             j += 1
         elif char == 'Q':
             board[i][j] = (Queen('white', "bV"))
@@ -647,8 +600,62 @@ def FENtoBoard(FEN):
         elif char == '-':
             continue
             # Board is done
+    while len(rookPositions)!=0:
+        i, j = rookPositions.pop()
+        if board[i][j].color == 'black':
+            if queensideCastleBlack and not kingsideCastleBlack and (i,j) != (0,0):
+                board[i][j].rook_moved = True
+            elif kingsideCastleBlack and not queensideCastleBlack and (i,j) != (0,7):
+                board[i][j].rook_moved = True
+            elif not queensideCastleBlack and not kingsideCastleBlack:
+                board[i][j].rook_moved = True
+            else:
+                board[i][j].rook_moved = False
+        if board[i][j].color == 'white':
+            if queensideCastleWhite and not kingsideCastleWhite and (i,j) != (7,0):
+                board[i][j].rook_moved = True
+            elif kingsideCastleWhite and not queensideCastleWhite and (i,j) != (7,7):
+                board[i][j].rook_moved = True
+            elif not queensideCastleWhite and not kingsideCastleWhite:
+                board[i][j].rook_moved = True
+            else:
+                board[i][j].rook_moved = False
+    hilfsboard = [[1600 for _ in range(8)] for _ in range(8)]
+    for i in range(len(board)):
+        for j in range (len(board[i])):
+            if board[i][j] is not None:
+                if board[i][j].color == 'black':
+                    if isinstance(board[i][j], Pawn):
+                        hilfsboard[i][j] = 1000
+                    elif isinstance(board[i][j], Bishop):
+                        hilfsboard[i][j] = 1010
+                    elif isinstance(board[i][j], Rook):
+                        hilfsboard[i][j] = 1011
+                    elif isinstance(board[i][j], Knight):
+                        hilfsboard[i][j] = 1001
+                    elif isinstance(board[i][j], King):
+                        hilfsboard[i][j] = 1111
+                    elif isinstance(board[i][j], Queen):
+                        hilfsboard[i][j] = 1110
+                elif board[i][j].color == 'white':
+                    if isinstance(board[i][j], Pawn):
+                        hilfsboard[i][j] = 2000
+                    elif isinstance(board[i][j], Bishop):
+                        hilfsboard[i][j] = 2010
+                    elif isinstance(board[i][j], Rook):
+                        hilfsboard[i][j] = 2011
+                    elif isinstance(board[i][j], Knight):
+                        hilfsboard[i][j] = 2001
+                    elif isinstance(board[i][j], King):
+                        hilfsboard[i][j] = 2111
+                    elif isinstance(board[i][j], Queen):
+                        hilfsboard[i][j] = 2110
+
+
+
+
     return board, color, kingPosWhite, kingPosBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
-        (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock
+        (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock, hilfsboard
 
 def allBoards():
 
@@ -657,7 +664,7 @@ def allBoards():
               ("A", 2, "r1bqk2r/ppp3pp/5p2/2nPp3/P1Pn2P1/3P1N2/1P2BP1P/RN1Q1RK1 b k", 42),
               ("N", 1, "r2qk2r/pp1bp1bp/2np1np1/2pP4/2P1P3/2N2N2/PP3PPP/R1BQKB1R w - - 0 1", 38),
               ("N", 2, "6r1/p5k1/3Q4/2N5/5P2/1p6/P5KP/4qR2 w - - 0 25", 42),
-              ("L", 1, "r2qk2r/p1p1p1P1/1pn4b/1N1Pb3/1PB1N1nP/8/1B1PQPp1/R3K2R b Qkq - 0 1", 45),
+              ("L", 1, "r2qk2r/p1p1p1P1/1pn4b/1N1Pb3/1PB1N1nP/8/1B1PQPp1/R3K2R b Qkq - 0 1", 40),
               ("L", 2, "r1bq4/pp1p1k1p/2p2p1p/2b5/3Nr1Q1/2N1P3/PPPK1PPP/3R1B1R w - - 0 1", 51),
               ("G", 1, "r1bqkr2/pp1pbpQp/8/2p1P3/2B5/2N5/PPP2PPP/R1B1K2R b KQq - 2 10", 20),
               ("G", 2, "r2r2k1/ppp1p2p/6p1/4b1p1/PnP4P/2N4P/1P6/R3KB2 w Q - 0 17", 22),
@@ -676,7 +683,7 @@ def allBoards():
               ("AF", 1, "8/8/4kpp1/3p4/p6P/2B4b/6P1/6K1 w - - 1 48", 17),
               ("AF", 2, "5rk1/pp4pp/4p3/2R3Q1/3n4/6qr/P1P2PPP/5RK1 w - - 2 24", 41),
               ("R", 1, "r1bqkb1r/p2p2pp/1pn2p1n/2p1p3/3P1B2/1P3N2/P1P1PPPP/RN1QKB1R w KQkq - 0 1", 34),
-              ("R", 2, "2r4r/8/8/4k3/8/R7/8/4K2R w - - 0 1 Legale Züge 30", 30),
+              ("R", 2, "2r4r/8/8/4k3/8/R7/8/4K2R w - - 0 1 Legale Züge 30", 29),
               ("P", 1, "r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w Qkq - 0 11", 27),
               ("P", 2, "8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34", 24),
               ("AH", 1, "1n1qkbnr/2pppppp/p7/p2P4/6Q1/8/PPPP1PPP/R1B1K1NR b KQk - 0 6", 16),

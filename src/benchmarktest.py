@@ -28,9 +28,10 @@ def zug_generator_starting():
 def zug_generator_middle():
     boardmiddle = board()
     boardmid, color, k1, k2, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
     #print(boardmid, color)
     boardmiddle.board = boardmid
+    boardmiddle.boardInteger = np.array(hilfsboard)
     boardmiddle.positions()
     list_of_possible_moves = []
     moves = boardmiddle.legalMoves()
@@ -51,9 +52,10 @@ def zug_generator_middle():
 def zug_generator_end():
     boardend = board()
     boardend_d, color, k1, k2, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock = FENtoBoard("r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w Qkq - 0 11")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w Qkq - 0 11")
     #print(boardmid, color)
     boardend.board = boardend_d
+    boardend.boardInteger = np.array(hilfsboard)
     boardend.positions()
     list_of_possible_moves = []
     moves = boardend.legalMoves()
@@ -77,7 +79,7 @@ array1 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ im
 array4 = (timeit.repeat(stmt='zug_generator_starting()', setup='from __main__ import zug_generator_starting', repeat=1000, number=1))
 array2 = (timeit.repeat(stmt='zug_generator_middle()', setup='from __main__ import zug_generator_middle', repeat=1000, number=1))
 array3 = timeit.repeat(stmt='zug_generator_end()', setup='from __main__ import zug_generator_end', repeat=1000, number=1)
-x = range(1, 101)
+x = range(1, 1001)
 fig, axs = plt.subplots(2, 2)
 axs[0, 0].plot(x, array4)
 axs[0, 0].set_title('Starting board')
