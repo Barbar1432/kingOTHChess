@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+from colors import get_color
 from piece import piece
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
 import numpy as np
@@ -44,6 +45,9 @@ class board :
          self.square_size = 64
          self.screen_size = (self.square_size * 8, self.square_size * 8)
          self.screen = pygame.display.set_mode(self.screen_size)
+         self.lastmove = ()
+         self.eatenPiecesWhite = []
+         self.eatenPiecesBlack = []
          self.dislocation_count_row = 100  # Dikey
          self.dislocation_count_col = 128  # Yatay
 
@@ -63,7 +67,8 @@ class board :
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
                      self.screen.blit(piece_image, rect)
          #DRAW THE HILL SHADOW
-         trans_color = (129, 133, 137, 50)
+         trans_color = get_color("shadow")
+         orange_color = get_color("orange")
          #UP
          pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
                                                      3 * self.square_size - 10 + self.dislocation_count_row,
@@ -80,16 +85,33 @@ class board :
          pygame.gfxdraw.box(self.screen, pygame.Rect(5 * self.square_size + self.dislocation_count_col,
                                                      3 * self.square_size + self.dislocation_count_row,
                                                      10, 2 * self.square_size), trans_color)
+         if self.lastmove != ():
+             sqSelected, sqDest = self.lastmove
+             sqSelectedRow, sqSelectedCol = sqSelected
+             sqDestRow, sqDestCol = sqDest
+             pygame.gfxdraw.box(self.screen, pygame.Rect(sqSelectedCol * self.square_size + self.dislocation_count_col,
+                                      sqSelectedRow * self.square_size + self.dislocation_count_row, self.square_size,
+                                      self.square_size), orange_color)
+             pygame.gfxdraw.box(self.screen, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
+                                        sqDestRow * self.square_size + self.dislocation_count_row, self.square_size,
+                                        self.square_size), orange_color)
+             piece_image = pygame.image.load('images/' + self.board[sqDestRow][sqDestCol].name + '.png')
+             piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
+             self.screen.blit(piece_image, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
+                                        sqDestRow * self.square_size + self.dislocation_count_row, self.square_size,
+                                        self.square_size))
+
          if booly: # Drag and drop booly
              # Helping bubbles for possible moves
              (row, col) = clickedpos
              clickedpiece = self.board[row][col]
              self.callPossibleMoves(clickedpos)
-             list = clickedpiece.possible_moves_list
-             for bubble in list:
+             listBub = clickedpiece.possible_moves_list
+             colorBub = get_color("bubble")
+             for bubble in listBub:
                  if (self.isLegal(clickedpos, bubble)):
                      bub_row, bub_col = bubble
-                     pygame.draw.circle(self.screen, (144, 238, 144),
+                     pygame.draw.circle(self.screen, colorBub,
                                         (bub_col * self.square_size + self.dislocation_count_col + 32,
                                          bub_row * self.square_size + self.dislocation_count_row + 32),
                                         10)
@@ -98,14 +120,58 @@ class board :
              (row,col) = clickedpos
              transparent_screen = pygame.Surface((self.square_size, self.square_size))
              transparent_screen.set_alpha(120)
-             transparent_screen.fill((144, 238, 144))
+             transparent_screen.fill(colorBub)
              pos1, pos2 = pygame.mouse.get_pos()
              pos1 = pos1 - self.dislocation_count_row
              pos2 = pos2 - self.dislocation_count_col
             # Clicked tile lit green
              self.screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
              self.screen.blit(clicked_image, (pos1-30 + self.dislocation_count_row, pos2-30 + self.dislocation_count_col))
-
+         if self.eatenPiecesBlack is not [] or self.eatenPiecesWhite is not []:
+             listBlack = list(self.eatenPiecesBlack)
+             listWhite = list(self.eatenPiecesWhite)
+             font = pygame.font.SysFont("fonts/PokemonGB.ttf", 15)
+             text_color = get_color("text")
+             text_dislocation_w = 14
+             text_dislocation_b = 14
+             i = 0
+             j = 0
+             k = 0
+             l = 0
+             m = 0
+             n = 0
+            #  Print eaten black Pieces:
+             for eatenpieces in listBlack:
+                 if eatenpieces[2] > 9:
+                     text_dislocation_b = 12
+                 img = pygame.image.load('images/' + eatenpieces[0] + '.png')
+                 img = pygame.transform.scale(img, (32, 32))
+                 turnText = font.render(("%d" % eatenpieces[2]), False, text_color)
+                 if j != 0 and j % 4 == 0:
+                     k += 34
+                     i = 0
+                 self.screen.blit(img, (self.dislocation_count_col + self.square_size * 8 + 23 + i,
+                                        self.dislocation_count_row + self.square_size * 4 + 24 + k))
+                 self.screen.blit(turnText, (self.dislocation_count_col + self.square_size * 8 + 23 + text_dislocation_b + i,
+                                        self.dislocation_count_row + self.square_size * 4 + 24 + 28 + k)) #  28 - Text mesafe
+                 i += 28
+                 j += 1
+            # Print eaten white Pieces
+             for eatenpieces2 in listWhite:
+                 if eatenpieces2[2] > 9:
+                     text_dislocation_w = 12
+                 img = pygame.image.load('images/' + eatenpieces2[0] + '.png')
+                 img = pygame.transform.scale(img, (32, 32))
+                 turnText = font.render(("%d" % eatenpieces2[2]), False, text_color)
+                 if m != 0 and m % 4 == 0:
+                     n += 34
+                     l = 0
+                 self.screen.blit(img, (self.dislocation_count_col + self.square_size * 10 + 26 + l,
+                                        self.dislocation_count_row + self.square_size * 4 + 24 + n))
+                 self.screen.blit(turnText, (self.dislocation_count_col + self.square_size * 10 + 26 + text_dislocation_w + l,
+                                             self.dislocation_count_row + self.square_size * 4 + 24 + 28 + n))  # 28 - Text mesafe
+                 l += 28
+                 m += 1
 
     def draw(self, booly, name, clickedpos):
         self.draw_board(booly, name, clickedpos)
@@ -289,8 +355,17 @@ class board :
 
            if self.board[row][col] != None:
                 if legalMoves[sqSelected].__contains__(sqDest):
-
                     row_dest, col_dest = sqDest
+
+                    #  Collection of eaten pieces  #
+                    if self.boardInteger[row_dest][col_dest] != 1600:
+                        if self.board[row_dest][col_dest].color == 'white':
+                            self.eatenPiecesWhite.append((self.board[row_dest][col_dest].name,
+                                                          self.boardInteger[row_dest][col_dest], self.Anzahlmoves))
+                        else:
+                            self.eatenPiecesBlack.append((self.board[row_dest][col_dest].name,
+                                                          self.boardInteger[row_dest][col_dest], self.Anzahlmoves))
+
                     self.board[row][col] = None
                     self.board[row_dest][col_dest] = piece
                     self.boardInteger[row][col] = 1600
@@ -307,28 +382,36 @@ class board :
                         if sqDest == (7, 6) and piece.king_moved == False:
                             rook = self.board[7][7]
                             self.board[7][7] = None
+                            self.boardInteger[7][7] = 1600
                             self.board[7][5] = rook
+                            self.boardInteger[7][5] = 2011
                             rook.position = (7, 5)
 
                         elif sqDest == (7, 1) and piece.king_moved == False:
                             rook = self.board[7][0]
                             self.board[7][0] = None
+                            self.boardInteger[7][0] = 1600
                             self.board[7][2] = rook
+                            self.boardInteger[7][2] = 2011
                             rook.position = (7, 2)
 
                         elif sqDest == (0, 6) and piece.king_moved == False:
                             rook = self.board[0][7]
                             self.board[0][7] = None
+                            self.boardInteger[0][7] = 1600
                             self.board[0][5] = rook
+                            self.boardInteger[0][5] = 1011
                             rook.position = (0, 5)
 
                         elif sqDest == (0, 1) and piece.king_moved == False:
                             rook = self.board[0][0]
                             self.board[0][0] = None
+                            self.boardInteger[0][0] = 1600
                             self.board[0][2] = rook
+                            self.boardInteger[0][2] = 1600
                             rook.position = (0, 2)
                         piece.king_moved = True
-
+                    self.lastmove = (sqSelected, sqDest)
 
        except KeyError:
            return
