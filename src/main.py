@@ -39,7 +39,7 @@ dummy.ai_bool = True # Decide if you want to play against a bot
 dummy.color = 'black'  # Decide bots color
 
 event_type = 0
-board.positions() #KALDIR
+board.positions()
 while running:
     if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
         dummy.random_move(dummy.ai_bool, board)
