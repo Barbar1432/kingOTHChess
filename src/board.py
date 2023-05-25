@@ -355,7 +355,7 @@ class board :
 
 
            legalMoves = self.legalMoves()
-           print(self.bewertungsFunktion())
+           #print(self.bewertungsFunktion())
            row, col = sqSelected
            piece = self.board[row][col]
            if isinstance(piece,Rook):

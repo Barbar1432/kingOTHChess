@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-import board
+import copy
 import piece
 #import main
 import visuals
@@ -10,6 +10,41 @@ from piece import Rook, Knight, Bishop, Queen, King,Pawn
 
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):
+
+    def test_mini_board(self):
+        b_board = board()
+        b_board.positions()
+        b_board.screen = ()
+        list_of_boards = generate_mini_boards(b_board)
+        i = 0
+        for boards in list_of_boards:
+            print("Board ", i, "= \n", boards.boardInteger)
+            i += 1
+
+    def test_alpha_beta_suche(self):
+        b_board = board()
+        b_board.screen = ()
+        #Testing
+        #t_board = testingBoard("A", 2, "4k3/p7/8/8/1P2N1p1/8/6r1/3K4 w", 12)
+        #b_board.board = t_board.board
+        #b_board.boardInteger = np.array(t_board.hilfsboard)
+        #b_board.blackKing.position = t_board.kingPosBlack
+        #b_board.whiteKing.position = t_board.kingPosWhite
+        b_board.positions()
+        value, path = alpha_beta(b_board, 2, float('-inf'), float('inf'), True)
+        print("Bewertungsfunktion ergibt = ", value)
+        i = 0
+        print("Current Board:", i)
+        chessBoardVisualize(b_board.boardInteger)
+        print("\n")
+        print("Expected path for the best outcome: \n")
+        i = 1
+        for boards in path:
+            print("Move:", i)
+            chessBoardVisualize(boards.boardInteger)
+            print("\n")
+            i += 1
+
     def test_Fricke(self):
         #print(FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq b3 1 0"))
         boardd, stell, fen, moves = allBoards()[0]
@@ -18,7 +53,6 @@ class TestBoard(unittest.TestCase):
         legal_moves = returnAllMoves(b_board, t_board)
         # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
-
     def test_A_1(self):
         boardd, stell, fen, moves = allBoards()[1]
         t_board = testingBoard(boardd, stell, fen, moves)
@@ -650,12 +684,110 @@ def FENtoBoard(FEN):
                         hilfsboard[i][j] = 2111
                     elif isinstance(board[i][j], Queen):
                         hilfsboard[i][j] = 2110
-
-
-
-
     return board, color, kingPosWhite, kingPosBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
         (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock, hilfsboard
+
+def generate_mini_boards(board):
+    board_list = []
+    list_of_possible_moves = []
+    moves = board.legalMoves()
+    for row in range(8):
+        for col in range(8):
+            piece = board.board[row][col]
+            if piece != None and board.Anzahlmoves % 2 == 0 and piece.color == 'white':
+                legal_moves = moves[(row, col)]
+                #print("Piece in pos:", row, col, " has legal moves:", legal_moves)
+                while len(legal_moves) != 0:
+                    move = legal_moves.pop()
+                    possible_move = ((row, col), move)
+                    list_of_possible_moves.append(possible_move)
+                    board_list.append(copy.deepcopy(board))
+            elif piece != None and board.Anzahlmoves % 2 == 1 and piece.color == 'black':
+                legal_moves = moves[(row, col)]
+                #print("Piece in pos:", row, col, " has legal moves:", legal_moves)
+                while len(legal_moves) != 0:
+                    move = legal_moves.pop()
+                    possible_move = ((row, col), move)
+                    list_of_possible_moves.append(possible_move)
+                    board_list.append(copy.deepcopy(board))
+    i = 0
+    for pos_moves in list_of_possible_moves:
+        sq, des = pos_moves
+        board_list[i].moveZa(sq, des)
+        i += 1
+    return board_list
+
+
+def alpha_beta(node, depth, alpha, beta, is_max, path=[]):
+    if depth == 0 or isTerminal(node):
+        return node.bewertungsFunktion(), path
+    if is_max:
+        best_value = alpha
+        best_path = None
+        for child in generate_mini_boards(node):
+            #print("At child:", child.boardInteger)
+            value, child_path = alpha_beta(child, depth-1, best_value, beta, False, path + [child])
+            if value > best_value:
+                best_value = value
+                best_path = child_path
+            if best_value >= beta: # Beta-Cutoff
+                print("BetaCutoff!")
+                break
+        return best_value, best_path
+    else:
+        best_value = beta
+        best_path = None
+        for child in generate_mini_boards(node):
+            #print("At child:", child.boardInteger)
+            value, child_path = alpha_beta(child, depth-1, alpha, best_value, True, path + [child])
+            if value < best_value:
+                best_value = value
+                best_path = child_path
+            if best_value <= alpha: # Alpha-Cutoff
+                print("AlphaCutoff!")
+                break
+        return best_value, best_path
+
+def isTerminal(b_board):
+    #TODO: If no more possible moves - Stalemate
+    if b_board.finished:
+        return True
+
+def chessBoardVisualize(integerList):
+    print("+[Board]+")
+    print("+--------+")
+    for i in range (len(integerList)):
+        string = "|"
+        for j in range (len(integerList[i])):
+            if integerList[i][j] == 1600:
+                string += "_"
+            elif integerList[i][j] == 2111:
+                string += "♚"
+            elif integerList[i][j] == 1111:
+                string += "♔"
+            elif integerList[i][j] == 2011:
+                string += "♜"
+            elif integerList[i][j] == 1011:
+                string += "♖"
+            elif integerList[i][j] == 2001:
+                string += "♞"
+            elif integerList[i][j] == 1001:
+                string += "♘"
+            elif integerList[i][j] == 2010:
+                string += "♝"
+            elif integerList[i][j] == 1010:
+                string += "♗"
+            elif integerList[i][j] == 2110:
+                string += "♛"
+            elif integerList[i][j] == 1110:
+                string += "♕"
+            elif integerList[i][j] == 2000:
+                string += "♟"
+            elif integerList[i][j] == 1000:
+                string += "♙"
+        print(string + "|")
+    print("+--------+")
+
 
 def allBoards():
 
