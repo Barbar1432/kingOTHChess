@@ -12,6 +12,9 @@ class board :
          self.whiteKing.position =(7,4)
          self.blackKing.position=(0,4)
          self.finished = False
+         self.moves_white ={}
+         self.moves_black = {}
+
          self.mapping =piece_mapping = {
               "sSah": 1111,
              "bSah": 2111,
@@ -272,37 +275,45 @@ class board :
         else :
             return True
     def bewertungsFunktion(self):
-        whiteCurrentPieces = []
-        blackCurrentPieces = []
+
         whitePoints = 0
         blackPoints = 0
-        center = [self.board[3][4], self.board[4][4], self.board[3][3], self.board[4][3]]
-        aroundCenter =[self.board[2][3], self.board[2][4], self.board[3][2], self.board[3][5],self.board[4][2], self.board[4][5], self.board[5][3], self.board[5][4]]
-        for row in range(len(self.board)):
-            for column in range(len(self.board[0])):
-                piece = self.board[row][column]
-                if (piece is not None):
-                   if piece.color == "white":
-                      whiteCurrentPieces.append(piece)
-                      whitePoints += piece.point
-                   if piece.color == "black":
-                       blackCurrentPieces.append(piece)
-                       blackPoints += piece.point
-        for piece in center:
-            if piece is not None:
-               if piece.color == "white":
-                   whitePoints += 1
-               if piece.color == "black":
-                   blackPoints += 1
-        for piece in aroundCenter:
-            if piece is not None:
-               if piece.name == "bSah":
-                   whitePoints += 2.2
-               if piece.color == "s.sah":
-                   blackPoints += 2.2
+        center = [(3,4), (4,4), (3,3), (4,3)]
+        black_positions = np.where(self.boardInteger < 1600)
+        white_positions = np.where(self.boardInteger >= 2000)
+        row_indices, col_indices = white_positions
 
-        bewertung = (whitePoints - blackPoints)*0.10
+        for row, col in zip(row_indices, col_indices):
+            piece = self.board[row][col]
+            if(piece==Pawn):
+                temp =self.board[row+1][col]
+                if (temp==Pawn):
+                    if (temp.color == "white"):
+                       whitePoints=whitePoints-5
+                whitePoints += 10
+                continue
+            if (piece.played):
+                whitePoints+=20
+            whitePoints += piece.point * 15
+            whitePoints = whitePoints + piece.PST_white[row][col]
+        rindices, cindices = black_positions
+        for r, c in zip(rindices, cindices):
+            piece = self.board[r][c]
+            if (piece == Pawn):
+                temp = self.board[r + 1][c]
+                if (temp == Pawn):
+                    if (temp.color == "black"):
+                        blackPoints = blackPoints - 5
+                blackPoints += 10
+                continue
+            if (piece.played):
+                blackPoints += 20
+            blackPoints += piece.point * 15
+            blackPoints = blackPoints + -1*piece.PST_black[r][c]
+
+        bewertung = (whitePoints - blackPoints)
         return bewertung
+
 
     def legalMoves(self):
         legalMoves = {}
@@ -310,7 +321,6 @@ class board :
         white_positions = np.where(self.boardInteger >= 2000)
         if self.Anzahlmoves % 2 == 0:  # sıra beyazda
             row_indices, col_indices = white_positions
-
             for row, col in zip(row_indices, col_indices):
                 pos = (row, col)
 
@@ -319,9 +329,9 @@ class board :
                 for pM in self.board[row][col].possible_moves_list:
                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.whiteKing,black_positions) == False):
                         legalMoves[self.board[row][col].position].append(pM)
+            self.moves_white = legalMoves
             return legalMoves
         if self.Anzahlmoves % 2 == 1:
-
             row_indices, col_indices = black_positions
             for row, col in zip(row_indices, col_indices):
                 pos = (row, col)
@@ -330,8 +340,8 @@ class board :
                 for pM in self.board[row][col].possible_moves_list:
                     if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.blackKing,white_positions) == False):
                         legalMoves[self.board[row][col].position].append(pM)
+            self.moves_black = legalMoves
             return legalMoves
-
     def moveZa (self,sqSelected, sqDest):
 
 
@@ -345,7 +355,7 @@ class board :
 
 
            legalMoves = self.legalMoves()
-
+           print(self.bewertungsFunktion())
            row, col = sqSelected
            piece = self.board[row][col]
            if isinstance(piece,Rook):

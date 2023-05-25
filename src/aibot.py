@@ -43,3 +43,4 @@ class bot:
                 board.Anzahlmoves += 1
                 print("No more possible moves")
 
+

@@ -35,7 +35,7 @@ btimer = timer()
 btimer.turn = False
 
 dummy = bot() # Welcome to life dummy
-dummy.ai_bool = True # Decide if you want to play against a bot
+dummy.ai_bool = False # Decide if you want to play against a bot
 dummy.color = 'black'  # Decide bots color
 
 event_type = 0
