@@ -11,39 +11,51 @@ from piece import Rook, Knight, Bishop, Queen, King,Pawn
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):
 
-    def test_mini_board(self):
-        b_board = board()
-        b_board.positions()
-        b_board.screen = ()
-        list_of_boards = generate_mini_boards(b_board)
-        i = 0
-        for boards in list_of_boards:
-            print("Board ", i, "= \n", boards.boardInteger)
-            i += 1
+    #def test_mini_board(self):
+    #    b_board = board()
+    #    b_board.positions()
+    #    b_board.screen = ()
+    #    list_of_boards = generate_mini_boards(b_board)
+    #    i = 0
+    #    for boards in list_of_boards:
+    #        print("Board ", i, "= \n", boards.boardInteger)
+    #        i += 1
 
-    def test_alpha_beta_suche(self):
+    #def test_alpha_beta_suche(self):
+    #    b_board = board()
+    #    b_board.screen = ()
+    #    #Testing
+    #    t_board = testingBoard("A", 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", 12)
+    #    b_board.board = t_board.board
+    #    b_board.boardInteger = np.array(t_board.hilfsboard)
+    #    b_board.positions()
+    #    b_board.blackKing = t_board.kingBlack
+    #    if t_board.kingBlack.position != (0, 4):
+    #        b_board.blackKing.king_moved = True
+    #    b_board.whiteKing = t_board.kingWhite
+    #    if t_board.kingWhite.position != (7, 4):
+    #        b_board.whiteKing.king_moved = True
+    #    if t_board.color == 'black':
+    #        b_board.Anzahlmoves += 1
+    #    value, path = alpha_beta(b_board, 1, float('-inf'), float('inf'), True)
+    #    print("Bewertungsfunktion ergibt = ", value)
+    #    i = 0
+    #    print("Current Board:", i)
+    #    chessBoardVisualize(b_board.boardInteger)
+    #    print("\n")
+    #    print("Expected path for the best outcome: \n")
+    #    i = 1
+    #    for boards in path:
+    #        print("Move:", i)
+    #        chessBoardVisualize(boards.boardInteger)
+    #        print("\n")
+    #        i += 1
+
+    def test_deneme(self):
+        t_board = testingBoard("deneme",-1,"2r4r/8/8/4k3/8/R7/8/4K2R w - - 0 1", -2)
         b_board = board()
-        b_board.screen = ()
-        #Testing
-        #t_board = testingBoard("A", 2, "4k3/p7/8/8/1P2N1p1/8/6r1/3K4 w", 12)
-        #b_board.board = t_board.board
-        #b_board.boardInteger = np.array(t_board.hilfsboard)
-        #b_board.blackKing.position = t_board.kingPosBlack
-        #b_board.whiteKing.position = t_board.kingPosWhite
-        b_board.positions()
-        value, path = alpha_beta(b_board, 2, float('-inf'), float('inf'), True)
-        print("Bewertungsfunktion ergibt = ", value)
-        i = 0
-        print("Current Board:", i)
-        chessBoardVisualize(b_board.boardInteger)
-        print("\n")
-        print("Expected path for the best outcome: \n")
-        i = 1
-        for boards in path:
-            print("Move:", i)
-            chessBoardVisualize(boards.boardInteger)
-            print("\n")
-            i += 1
+        legal_moves = returnAllMoves(b_board, t_board)
+        print(legal_moves)
 
     def test_Fricke(self):
         #print(FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq b3 1 0"))
@@ -442,17 +454,22 @@ class testingBoard():
         self.stellung = stell
         self.FEN_Notation = fen
         self.moves = moves
-        self.board, self.color, self.kingPosWhite, self.kingPosBlack, self.kingSideCastle_white, self.queenSideCastle_white, \
+        self.board, self.color, self.kingWhite, self.kingBlack, self.kingSideCastle_white, self.queenSideCastle_white, \
             self.kingSideCastle_black, self.queenSideCastle_black, \
             self.enPassent, self.halfMoveClock, self.fullMoveClock, self.hilfsboard = FENtoBoard(fen)
 
 def returnAllMoves(b_board, t_board):
     b_board.board = t_board.board
     b_board.boardInteger = np.array(t_board.hilfsboard)
+    chessBoardVisualize(b_board.boardInteger)
     #print(b_board.boardInteger)
-    b_board.blackKing.position = t_board.kingPosBlack
-    b_board.whiteKing.position = t_board.kingPosWhite
     b_board.positions()
+    b_board.blackKing = t_board.kingBlack
+    if t_board.kingBlack.position != (0,4):
+        b_board.blackKing.king_moved = True
+    b_board.whiteKing = t_board.kingWhite
+    if t_board.kingWhite.position != (7,4):
+        b_board.whiteKing.king_moved = True
     list_of_possible_moves = []
     if t_board.color == 'black':
         b_board.Anzahlmoves += 1
@@ -479,8 +496,8 @@ def FENtoBoard(FEN):
     queensideCastleBlack = False
     kingsideCastleWhite = False
     queensideCastleWhite = False
-    kingPosWhite = ()
-    kingPosBlack = ()
+    kingWhite = None
+    kingBlack = None
     enPassentSquareCol = ()
     enPassentSquareRow = ()
     halfMoveClock = ()
@@ -513,7 +530,7 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'k':
             board[i][j] = (King('black', "sSah"))
-            kingPosBlack = (i, j)
+            kingBlack = board[i][j]
             j += 1
         elif char == 'N':
             board[i][j] = (Knight('white', "bAt"))
@@ -531,7 +548,7 @@ def FENtoBoard(FEN):
             j += 1
         elif char == 'K':
             board[i][j] = (King('white', "bSah"))
-            kingPosWhite = (i, j)
+            kingWhite = board[i][j]
             j += 1
         elif char == 'P':
             board[i][j] = (Pawn('white', "bPion"))
@@ -551,17 +568,17 @@ def FENtoBoard(FEN):
             elif k == 2: # Castling availability - Rok nasıl yapılabilir?
                 if char == 'K':
                     kingsideCastleWhite = True
-                    if FEN != '':
+                    if len(FEN) != 0:
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 if char == 'Q':
                     queensideCastleWhite = True
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 if char == 'k':
                     kingsideCastleBlack = True
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 if char == 'q':
@@ -569,42 +586,42 @@ def FENtoBoard(FEN):
             elif k == 3: # En Passent Variable
                 if char == 'a':
                     enPassentSquareCol = 0
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'b':
                     enPassentSquareCol = 1
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'c':
                     enPassentSquareCol = 2
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'd':
                     enPassentSquareCol = 3
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'e':
                     enPassentSquareCol = 4
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'f':
                     enPassentSquareCol = 5
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'g':
                     enPassentSquareCol = 6
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 elif char == 'h':
                     enPassentSquareCol = 7
-                    if FEN != '':
+                    if FEN != "":
                         char = FEN[0]
                         FEN = ''.join(FEN.split(char, 1))
                 if char.isdigit():
@@ -684,7 +701,7 @@ def FENtoBoard(FEN):
                         hilfsboard[i][j] = 2111
                     elif isinstance(board[i][j], Queen):
                         hilfsboard[i][j] = 2110
-    return board, color, kingPosWhite, kingPosBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
+    return board, color, kingWhite, kingBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
         (enPassentSquareRow,enPassentSquareCol), halfMoveClock, fullMoveClock, hilfsboard
 
 def generate_mini_boards(board):
