@@ -11,15 +11,17 @@ from piece import Rook, Knight, Bishop, Queen, King,Pawn
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):
 
-    #def test_mini_board(self):
-    #    b_board = board()
-    #    b_board.positions()
-    #    b_board.screen = ()
-    #    list_of_boards = generate_mini_boards(b_board)
-    #    i = 0
-    #    for boards in list_of_boards:
-    #        print("Board ", i, "= \n", boards.boardInteger)
-    #        i += 1
+
+    def test_mini_board(self):
+        b_board = board()
+        b_board.positions()
+        b_board.screen = ()
+        list_of_boards = generate_mini_boards(b_board)
+        i = 0
+        for boards in list_of_boards:
+            print("Board ", i, "= \n", boards.boardInteger)
+            i += 1
+
 
     #def test_alpha_beta_suche(self):
     #    b_board = board()

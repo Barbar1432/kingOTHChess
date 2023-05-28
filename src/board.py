@@ -317,6 +317,7 @@ class board :
 
     def legalMoves(self):
         legalMoves = {}
+
         black_positions = np.where(self.boardInteger < 1600)
         white_positions = np.where(self.boardInteger >= 2000)
         if self.Anzahlmoves % 2 == 0:  # sıra beyazda
@@ -329,7 +330,7 @@ class board :
                 for pM in self.board[row][col].possible_moves_list:
                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.whiteKing,black_positions) == False):
                         legalMoves[self.board[row][col].position].append(pM)
-            self.moves_white = legalMoves
+
             return legalMoves
         if self.Anzahlmoves % 2 == 1:
             row_indices, col_indices = black_positions
@@ -340,7 +341,8 @@ class board :
                 for pM in self.board[row][col].possible_moves_list:
                     if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.blackKing,white_positions) == False):
                         legalMoves[self.board[row][col].position].append(pM)
-            self.moves_black = legalMoves
+
+
             return legalMoves
     def moveZa (self,sqSelected, sqDest):
 
@@ -521,5 +523,142 @@ class board :
         #print(King.possible_moves_list)
         #print("----------")
         return (right,left)
+
+    """
+         bu klasik alpha beta boyleydi hemen hemen şimdilik gptye bidaha yazdırttım anla diye kodun kalanını
+         """
+    def alpha_beta(self,board, depth, alpha, beta, is_max):
+        # if depth == 0 or isGameOver(board):
+           # return board_evaluation(board)
+
+        if is_max:
+            best_value = float('-inf')
+            for child in self.createBoard(board):
+                value = self.alpha_beta(child, depth - 1, alpha, beta, False)
+                best_value = max(best_value, value)
+                alpha = max(alpha, best_value)
+                if alpha >= beta:
+                    # Alpha cutoff
+                    break
+            return best_value
+
+        else:
+            best_value = float('inf')
+            for child in self.createBoard(board):
+                value =self.alpha_beta(child, depth - 1, alpha, beta, True)
+                best_value = min(best_value, value)
+                beta = min(beta, best_value)
+                if beta <= alpha:
+                    # Beta cutoff
+                    break
+            return best_value
+
+
+    """
+        Abi şimdilik benim herşeyi tek boardda yapmaya calıstıgım implementasyonu rafakaldırdık. bu klasik bir sürü board generate etmeli
+        implementasyonu deneyelim tekrardan diye düşündüm. Onun içinde deepCpy kullanmak gerekiyor heralde. 
+        Boardu copyliyincede cok masraflı oluyo ondan bu numpy boardu copyleyemek daha mantıklı geldi. 
+        """
+    """
+     şimdi su sekil calısıyo bu once bitane IntegerBoard alıyo , o dalyarragı mecburen self.convert_board_integer_to_board
+     fonksiyonuyla normal bi boarda çeviriyo (legalMoves falan vb fonksiyonları kullanamıyoruz yoksa) sonra 20 tane legal move
+     varsa 20 tane board oluşturuyo hepsinde birer move oynanmış olarak
+     dipNot olarak " self.convert_board_integer_to_board fonksiyonuyla normal bi boarda çeviriyo" şimdi madem dondurcektik buna
+     ne manası oldu gibi bir düşünce var aklımda ama mesela en son depthtekilerin hiçbirini cevirmiyoruz 7 depthte bile 256 board 
+     yapıyor birde cutoffları falan dusununce yinede yapmaya deger gibi geldi .Board represantasyonunu terk edip boardIntegera gecebilsek
+     super olurdu aslında ama o cok iş gibi gozukuyor şimdilik piece classını falan epey degistirmemiz gerekir 
+     """
+    def createBoard (self,boardInt):
+         zaBoard =  self.convert_board_integer_to_board(boardInt)
+         legalMoves,moves= self.legalMoves_alphaBeta(zaBoard)
+         for move in moves:
+             start,dest = move
+             s_row ,s_col = start
+             d_row,d_col = dest
+             board = np.copy(boardInt)
+             pieceMoved =board[s_row][s_col]
+             board[s_row][s_col] = 1600
+             board[d_row][d_col] =pieceMoved
+
+    """
+    bu işte ismi zaten anlatıyo ne bok yaptıgını , yalnız pozisyon atamıyo galiba  Pawn('black', "sPion") lara pozisyon 
+    variablesinide ekleyebiliriz 
+     """
+
+    def convert_board_integer_to_board(self,boardInt):
+        board = []
+        for row in boardInt:
+            board_row = []
+            for value in row:
+                if value == 1000:
+                    board_row.append(Pawn('black', "sPion"))
+                elif value == 1011:
+                    board_row.append(Rook('black', "sK"))
+                elif value == 1001:
+                    board_row.append(Knight('black', "sAt"))
+                elif value == 1010:
+                    board_row.append(Bishop('black', "sFil"))
+                elif value == 1110:
+                    board_row.append(Queen('black', "sV"))
+                elif value == 1111:
+                    board_row.append(King("black", "sSah"))
+                elif value == 2000:
+                    board_row.append(Pawn('white', "bPion"))
+                elif value == 2011:
+                    board_row.append(Rook('white', "bK"))
+                elif value == 2001:
+                    board_row.append(Knight('white', "bAt"))
+                elif value == 2010:
+                    board_row.append(Bishop('white', "bFil"))
+                elif value == 2110:
+                    board_row.append(Queen('white', "bV"))
+                elif value == 2111:
+                    board_row.append( King("white","bSah"))
+                else:
+                    board_row.append(None)
+            board.append(board_row)
+        return board
+
+    """
+     bunu surekli degisiklikler yaptıgım için ekledim kodun kalanında sıkıntılar oluyodu deneme tahtası gibi ama farkı su annlık
+     board parametresi alıyo bitane ( self.board) dısındakı seylerle pushlayabiliyoruz birde legalMOves dicionarysinin yanında normal 
+     moves diye tim legal moveları donduren bi liste de veriyor . birde buna işte kimin sırası olduguna dair bir parametre daha 
+     ekleyebiliriz yoksa siyahın sıralarını generate etcekken self.AnzahlMoves bu alpha betadan bagımsız oldugu için 
+     sorun cıkabilir 
+        """
+
+    def legalMoves_alphaBeta(self, board):
+        legalMoves = {}
+        moves = []
+        black_positions = np.where(self.boardInteger < 1600)
+        white_positions = np.where(self.boardInteger >= 2000)
+        if self.Anzahlmoves % 2 == 0:  # sıra beyazda
+            row_indices, col_indices = white_positions
+            for row, col in zip(row_indices, col_indices):
+                pos = (row, col)
+
+                self.callPossibleMoves(pos)
+                legalMoves[pos] = []
+                for pM in self.board[row][col].possible_moves_list:
+                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.whiteKing,black_positions) == False):
+                        legalMoves[self.board[row][col].position].append(pM)
+                        moves.append((self.board[row][col].position, pM))
+
+            return legalMoves, moves
+        if self.Anzahlmoves % 2 == 1:
+            row_indices, col_indices = black_positions
+            for row, col in zip(row_indices, col_indices):
+                pos = (row, col)
+                self.callPossibleMoves(pos)
+                legalMoves[pos] = []
+                for pM in self.board[row][col].possible_moves_list:
+                    if (self.isLegal(pos, pM) and self.is_king_threatened(pos, pM, self.blackKing, white_positions) == False):
+                        legalMoves[self.board[row][col].position].append(pM)
+                        moves.append((self.board[row][col].position, pM))
+
+            return legalMoves, moves
+
+
+
 
    

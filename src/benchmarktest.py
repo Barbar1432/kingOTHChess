@@ -90,4 +90,3 @@ axs[1, 0].set_title('Near-end board')
 fig.tight_layout()
 plt.yticks([0.0, 0.1, 0.2, 0.3, 0.4])
 plt.show()
-
