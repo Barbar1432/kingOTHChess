@@ -23,9 +23,12 @@ class Pawn(piece):
         (row, column) = self.position
         if row == 1 and self.color == 'black':
             (row, column) = self.position
-            if board[row + 1][column] == None:
+            if board[row + 1][column] == None and board[row + 2][column] == None:
                 self.possible_moves_list.append((row + 1, column))
                 self.possible_moves_list.append((row + 2, column))
+            elif board[row + 1][column] == None and board[row + 2][column] != None:
+                self.possible_moves_list.append((row + 1, column))
+
             if column + 1 <= 7:
                 if board[row + 1][column + 1] != None:
                     self.possible_moves_list.append((row + 1, column + 1))
@@ -48,9 +51,11 @@ class Pawn(piece):
         elif (row == 6 and self.color == 'white'):
             (row, column) = self.position
 
-            if board[row - 1][column] == None:
+            if board[row - 1][column] == None and board[row - 2][column] == None:
                 self.possible_moves_list.append((row - 1, column))
                 self.possible_moves_list.append((row - 2, column))
+            elif board[row - 1][column] == None and board[row - 2][column] != None:
+                self.possible_moves_list.append((row - 1, column))
 
             if column + 1 <= 7:
                 if board[row - 1][column + 1] != None:

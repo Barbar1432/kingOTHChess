@@ -352,7 +352,7 @@ class board :
             else:
                 right_free = False
                 break
-        if right_free == True and (isinstance(self.board[row][7],Rook) == True) and self.board[row][7].rook_moved == False and King.king_moved == False: #if free and there is a rook
+        if right_free == True and (isinstance(self.board[row][7],Rook) == True) and self.board[row][7].rook_moved == False and King.king_moved == False and (self.board[row][7].position ==(0,7) or self.board[row][7].position ==(7,7)): #if free and there is a rook
 
             right_free = True
         else:
@@ -367,7 +367,7 @@ class board :
                 left_free = False
                 break
 
-        if left_free == True and isinstance(self.board[row][0],Rook) == True and self.board[row][0].rook_moved == False and King.king_moved == False:
+        if left_free == True and isinstance(self.board[row][0],Rook) == True and self.board[row][0].rook_moved == False and King.king_moved == False and (self.board[row][0].position ==(0,0) or self.board[row][0].position ==(7,0)):
 
             left_free = True
         else:
