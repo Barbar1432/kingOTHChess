@@ -16,11 +16,12 @@ if __name__ == '__main__':
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
- board = board()
- #boardd, color, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
- #enPassentSquareRow, enPassentSquareCol), \
- #   halfMoveClock, fullMoveClock = FENtoBoard("8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34")
- #board.board = boardd
+
+    board = board()
+    """boardd, color, kingWhite, kingBlack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, \
+    (enPassentSquareRow, enPassentSquareCol), halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(
+    "1n1qkbnr/2pppppp/p7/p2P4/6Q1/8/PPPP1PPP/R1B1K1NR b KQk - 0 6")
+    board.board = boardd"""
 pygame.init()
 pygame.font.init()
 deneme_screen = pygame.display.set_mode((1024,712))

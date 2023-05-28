@@ -10,8 +10,10 @@ def randomizer(moves_list):
 
 class bot:
     def __init__(self):
+
         self.ai_bool = False # AI-Bot active bool
         self.color = 'black'  # Make sure to decide the bots color beforehand
+
 
 
     def random_move(self, ai_bool, board):
