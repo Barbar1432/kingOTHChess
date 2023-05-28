@@ -12,10 +12,10 @@ class piece:
 
 
 class Pawn(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'pawn', 1)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.played = False
         self.PST_white =  [[ 0,  0,  0,  0,  0,  0,  0,  0],
                      [50, 50, 50, 50, 50, 50, 50, 50],
@@ -101,10 +101,10 @@ class Pawn(piece):
 
 
 class Bishop(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'bishop', 3)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.played = False
         self.PST_white = [[-10, -10, -10, -10, -10, -10, -10, -10],
                           [-10, 10, 0,0, 0, 0, 10, -10],
@@ -185,10 +185,10 @@ class Bishop(piece):
 
 
 class Knight(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'knight', 3)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.played = False
         self.PST_white = [[-50, -10, -10, -10, -10, -10, -10, -50],
                           [-40, -10, 0, 5, 5, 0, -10, -40],
@@ -241,10 +241,10 @@ class Knight(piece):
 
 
 class King(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'king', 10)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.king_moved = False
         self.played = False
         self.PST_white = [
@@ -318,10 +318,10 @@ class King(piece):
 
 
 class Queen(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'queen', 9)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.played =False
         self.PST_white= [ [ -20, -10, -10, -5, -5, -10, -10, -20,],
           [-10, 0, 0, 0, 0, 0, 0, -10,],
@@ -447,10 +447,10 @@ class Queen(piece):
 
 
 class Rook(piece):
-    def __init__(self, color, name):
+    def __init__(self, color, name,position):
         super().__init__(color, 'rook', 5)
         self.name = name
-        self.position = (0, 0)
+        self.position = position
         self.rook_moved = False
         self.played =False
         self.PST_white = [[-5, 0, 0, 0, 0, 0, 0, -5],

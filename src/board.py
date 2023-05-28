@@ -6,8 +6,8 @@ from piece import Rook, Knight, Bishop, Queen, King,Pawn
 import numpy as np
 class board :
     def __init__(self):
-         self.whiteKing = King("white","bSah")
-         self.blackKing = King("black", "sSah")
+         self.whiteKing = King("white","bSah",(0,0))
+         self.blackKing = King("black", "sSah",(0,0))
          self.Anzahlmoves = 0
          self.whiteKing.position =(7,4)
          self.blackKing.position=(0,4)
@@ -30,13 +30,13 @@ class board :
             "bPion": 2000
 }
          self.board = [
-            [ Rook('black', "sK"),Knight('black',"sAt"), Bishop('black',"sFil"), Queen('black',"sV"), self.blackKing, Bishop('black',"sFil"),
-             Knight('black',"sAt"), Rook('black',"sK")],
-            [Pawn('black',"sPion") for _ in range(8)],
+            [ Rook('black', "sK",(0,0)),Knight('black',"sAt",(0,0)), Bishop('black',"sFil",(0,0)), Queen('black',"sV",(0,0)), self.blackKing, Bishop('black',"sFil",(0,0)),
+             Knight('black',"sAt",(0,0)), Rook('black',"sK",(0,0))],
+            [Pawn('black',"sPion",(0,0)) for _ in range(8)],
             [None] * 8, [None] * 8,[None] * 8,[None] * 8,
-            [Pawn('white',"bPion") for _ in range(8)],
-            [Rook('white', "bK"), Knight('white', "bAt"), Bishop('white', "bFil"), Queen('white',"bV"),
-             self.whiteKing, Bishop('white',"bFil"), Knight('white', "bAt"), Rook('white', "bK")] ]
+            [Pawn('white',"bPion",(0,0)) for _ in range(8)],
+            [Rook('white', "bK",(0,0)), Knight('white', "bAt",(0,0)), Bishop('white', "bFil",(0,0)), Queen('white',"bV",(0,0)),
+             self.whiteKing, Bishop('white',"bFil",(0,0)), Knight('white', "bAt",(0,0)), Rook('white', "bK",(0,0))] ]
          self.boardInteger = np.array([
              [1011, 1001, 1010, 1110, 1111, 1010, 1001, 1011],[1000 for _ in range(8)],
              [1600 for _ in range(8)],
@@ -533,7 +533,7 @@ class board :
 
         if is_max:
             best_value = float('-inf')
-            for child in self.createBoard(board):
+            for child in self.createBoard(board,True):
                 value = self.alpha_beta(child, depth - 1, alpha, beta, False)
                 best_value = max(best_value, value)
                 alpha = max(alpha, best_value)
@@ -544,7 +544,7 @@ class board :
 
         else:
             best_value = float('inf')
-            for child in self.createBoard(board):
+            for child in self.createBoard(board,False):
                 value =self.alpha_beta(child, depth - 1, alpha, beta, True)
                 best_value = min(best_value, value)
                 beta = min(beta, best_value)
@@ -568,9 +568,9 @@ class board :
      yapıyor birde cutoffları falan dusununce yinede yapmaya deger gibi geldi .Board represantasyonunu terk edip boardIntegera gecebilsek
      super olurdu aslında ama o cok iş gibi gozukuyor şimdilik piece classını falan epey degistirmemiz gerekir 
      """
-    def createBoard (self,boardInt):
+    def createBoard (self,boardInt,isMax):
          zaBoard =  self.convert_board_integer_to_board(boardInt)
-         legalMoves,moves= self.legalMoves_alphaBeta(zaBoard)
+         legalMoves,moves= self.legalMoves_alphaBeta(zaBoard,isMax)
          for move in moves:
              start,dest = move
              s_row ,s_col = start
@@ -585,37 +585,41 @@ class board :
     variablesinide ekleyebiliriz 
      """
 
-    def convert_board_integer_to_board(self,boardInt):
+    def convert_board_integer_to_board(self, boardInt, positions):
         board = []
-        for row in boardInt:
+        for i, row in enumerate(boardInt):
             board_row = []
-            for value in row:
+            for j, value in enumerate(row):
+                position = positions[i][j]  # Get the position for the current piece
+
                 if value == 1000:
-                    board_row.append(Pawn('black', "sPion"))
+                    piece = Pawn('black', "sPion", position)
                 elif value == 1011:
-                    board_row.append(Rook('black', "sK"))
+                    piece = Rook('black', "sK", position)
                 elif value == 1001:
-                    board_row.append(Knight('black', "sAt"))
+                    piece = Knight('black', "sAt", position)
                 elif value == 1010:
-                    board_row.append(Bishop('black', "sFil"))
+                    piece = Bishop('black', "sFil", position)
                 elif value == 1110:
-                    board_row.append(Queen('black', "sV"))
+                    piece = Queen('black', "sV", position)
                 elif value == 1111:
-                    board_row.append(King("black", "sSah"))
+                    piece = King("black", "sSah", position)
                 elif value == 2000:
-                    board_row.append(Pawn('white', "bPion"))
+                    piece = Pawn('white', "bPion", position)
                 elif value == 2011:
-                    board_row.append(Rook('white', "bK"))
+                    piece = Rook('white', "bK", position)
                 elif value == 2001:
-                    board_row.append(Knight('white', "bAt"))
+                    piece = Knight('white', "bAt", position)
                 elif value == 2010:
-                    board_row.append(Bishop('white', "bFil"))
+                    piece = Bishop('white', "bFil", position)
                 elif value == 2110:
-                    board_row.append(Queen('white', "bV"))
+                    piece = Queen('white', "bV", position)
                 elif value == 2111:
-                    board_row.append( King("white","bSah"))
+                    piece = King("white", "bSah", position)
                 else:
-                    board_row.append(None)
+                    piece = None
+
+                board_row.append(piece)
             board.append(board_row)
         return board
 
@@ -627,12 +631,12 @@ class board :
      sorun cıkabilir 
         """
 
-    def legalMoves_alphaBeta(self, board):
+    def legalMoves_alphaBeta(self, board,isMax):
         legalMoves = {}
         moves = []
         black_positions = np.where(self.boardInteger < 1600)
         white_positions = np.where(self.boardInteger >= 2000)
-        if self.Anzahlmoves % 2 == 0:  # sıra beyazda
+        if isMax:  # sıra beyazda
             row_indices, col_indices = white_positions
             for row, col in zip(row_indices, col_indices):
                 pos = (row, col)
@@ -645,7 +649,7 @@ class board :
                         moves.append((self.board[row][col].position, pM))
 
             return legalMoves, moves
-        if self.Anzahlmoves % 2 == 1:
+        else:
             row_indices, col_indices = black_positions
             for row, col in zip(row_indices, col_indices):
                 pos = (row, col)
