@@ -1,19 +1,8 @@
 import string
-
+from colors import get_color
 import pygame
 from board import board
 from piece import Rook, Knight, Bishop, Queen, King, Pawn
-def get_color(color):
-    if color == "background":
-        return (241, 222, 201)
-    elif color == "outline1":
-        return (141, 123, 104)
-    elif color == "outline2":
-        return (164, 144, 124)
-    elif color == "text":
-        return (121, 102, 81)
-    else:
-        return
 class drag_n_drop_visual:
     def __init__(self):
         self.sec = []
@@ -92,6 +81,28 @@ def background(screen, b_board):
         number_surface = font.render(str(number), False, get_color("text"))
         screen.blit(number_surface, (b_board.dislocation_count_col + b_board.square_size * 8 + dislocator,
                                      b_board.dislocation_count_row + dist_between + (8-i) * b_board.square_size))
+    # ------ Player Frame ------- #
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col + b_board.square_size * 8 + 30,
+                                 b_board.dislocation_count_row + b_board.square_size - 40,
+                                 4 * b_board.square_size, 4 * b_board.square_size))
+    pygame.draw.rect(screen, get_color("outline2"),
+                     pygame.Rect(b_board.dislocation_count_col + b_board.square_size * 8 + 23,
+                                 b_board.dislocation_count_row + b_board.square_size - 30,
+                                 4 * b_board.square_size - 2, 4 * b_board.square_size - 20))
+    # ------ Points Frame ------- #
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col + b_board.square_size * 8 + 30,
+                                 b_board.dislocation_count_row + b_board.square_size - 40 + 4 * b_board.square_size - 10,
+                                 4 * b_board.square_size, 2 * b_board.square_size + 32))
+    pygame.draw.rect(screen, get_color("outline2"),
+                     pygame.Rect(b_board.dislocation_count_col + b_board.square_size * 8 + 23,
+                                 b_board.dislocation_count_row + b_board.square_size - 30 + 4 * b_board.square_size - 10,
+                                 4 * b_board.square_size - 2, 2 * b_board.square_size + 12))
+    pygame.draw.rect(screen, get_color("outline1"),
+                     pygame.Rect(b_board.dislocation_count_col + b_board.square_size * 8 + 2 * b_board.square_size + 17,
+                                b_board.dislocation_count_row + b_board.square_size - 30 + 4 * b_board.square_size - 10,
+                                 10, 2 * b_board.square_size + 16))
 
 
 def timer_black(screen, timer_b, board):

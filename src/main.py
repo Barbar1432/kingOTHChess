@@ -37,10 +37,10 @@ btimer.turn = False
 
 dummy = bot() # Welcome to life dummy
 dummy.ai_bool = False # Decide if you want to play against a bot
-dummy.color = False  # Decide bots color
+dummy.color = 'black'  # Decide bots color
 
 event_type = 0
-board.positions() #KALDIR
+board.positions()
 while running:
     if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
         dummy.random_move(dummy.ai_bool, board)
