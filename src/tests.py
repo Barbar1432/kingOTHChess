@@ -11,6 +11,7 @@ from piece import Rook, Knight, Bishop, Queen, King,Pawn
 # TODO: UNIT TESTS
 class TestBoard(unittest.TestCase):
 
+    """
 
     def test_mini_board(self):
         b_board = board()
@@ -21,44 +22,44 @@ class TestBoard(unittest.TestCase):
         for boards in list_of_boards:
             print("Board ", i, "= \n", boards.boardInteger)
             i += 1
+    """
 
-
-    #def test_alpha_beta_suche(self):
-    #    b_board = board()
-    #    b_board.screen = ()
-    #    #Testing
-    #    t_board = testingBoard("A", 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", 12)
-    #    b_board.board = t_board.board
-    #    b_board.boardInteger = np.array(t_board.hilfsboard)
-    #    b_board.positions()
-    #    b_board.blackKing = t_board.kingBlack
-    #    if t_board.kingBlack.position != (0, 4):
-    #        b_board.blackKing.king_moved = True
-    #    b_board.whiteKing = t_board.kingWhite
-    #    if t_board.kingWhite.position != (7, 4):
-    #        b_board.whiteKing.king_moved = True
-    #    if t_board.color == 'black':
-    #        b_board.Anzahlmoves += 1
-    #    value, path = alpha_beta(b_board, 1, float('-inf'), float('inf'), True)
-    #    print("Bewertungsfunktion ergibt = ", value)
-    #    i = 0
-    #    print("Current Board:", i)
-    #    chessBoardVisualize(b_board.boardInteger)
-    #    print("\n")
-    #    print("Expected path for the best outcome: \n")
-    #    i = 1
-    #    for boards in path:
-    #        print("Move:", i)
-    #        chessBoardVisualize(boards.boardInteger)
-    #        print("\n")
-    #        i += 1
-
+    def test_alpha_beta_suche(self):
+        b_board = board()
+        b_board.screen = ()
+        #Testing
+        t_board = testingBoard("A", 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", 12)
+        b_board.board = t_board.board
+        b_board.boardInteger = np.array(t_board.hilfsboard)
+        b_board.positions()
+        b_board.blackKing = t_board.kingBlack
+        if t_board.kingBlack.position != (0, 4):
+            b_board.blackKing.king_moved = True
+        b_board.whiteKing = t_board.kingWhite
+        if t_board.kingWhite.position != (7, 4):
+            b_board.whiteKing.king_moved = True
+        if t_board.color == 'black':
+            b_board.Anzahlmoves += 1
+        value, path = alpha_beta(b_board, 3, float('-inf'), float('inf'), True)
+        print("Bewertungsfunktion ergibt = ", value)
+        i = 0
+        print("Current Board:", i)
+        chessBoardVisualize(b_board.boardInteger)
+        print("\n")
+        print("Expected path for the best outcome: \n")
+        i = 1
+        for boards in path:
+            print("Move:", i)
+            chessBoardVisualize(boards.boardInteger)
+            print("\n")
+            i += 1
+    """
     def test_deneme(self):
         t_board = testingBoard("deneme",-1,"2r4r/8/8/4k3/8/R7/8/4K2R w - - 0 1", -2)
         b_board = board()
         legal_moves = returnAllMoves(b_board, t_board)
         print(legal_moves)
-
+    """
     def test_Fricke(self):
         #print(FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq b3 1 0"))
         boardd, stell, fen, moves = allBoards()[0]
@@ -450,6 +451,723 @@ class TestBoard(unittest.TestCase):
         # print(legal_moves)
         self.assertEqual(len(legal_moves), t_board.moves)
 
+class TestAlphaBeta(unittest.TestCase):
+    """def test_alpha_beta_suche(self):
+        b_board = board()
+        b_board.screen = ()
+        # Testing
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[3]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        print("Current Board:")
+        chessBoardVisualize(b_board.boardInteger)
+        print("\n")
+        print("First move for the best outcome in depth: ", depth, " ->", move, "\n")
+        print("Expected move:", t_board.moves)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        chessBoardVisualize(b_board.boardInteger)
+        self.assertIn(move, t_board.moves)
+    def test_alpha_beta_suche2(self):
+        b_board = board()
+        b_board.screen = ()
+        # Testing
+        t_board = testingBoard("A", 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", 12)
+        b_board.board = t_board.board
+        b_board.boardInteger = np.array(t_board.hilfsboard)
+        b_board.positions()
+        b_board.blackKing = t_board.kingBlack
+        if t_board.kingBlack.position != (0, 4):
+            b_board.blackKing.king_moved = True
+        b_board.whiteKing = t_board.kingWhite
+        if t_board.kingWhite.position != (7, 4):
+            b_board.whiteKing.king_moved = True
+        if t_board.color == 'black':
+            b_board.Anzahlmoves += 1
+        value, path = alpha_beta(b_board, 3, float('-inf'), float('inf'), True)
+        print("Bewertungsfunktion ergibt = ", value)
+        i = 0
+        print("Current Board:", i)
+        chessBoardVisualize(b_board.boardInteger)
+        print("\n")
+        print("Expected path for the best outcome: \n")
+        i = 1
+        for boards in path:
+            print("Move:", i)
+            chessBoardVisualize(boards.boardInteger)
+            print("\n")
+            i += 1
+    """
+    #  Alpha Beta Testing
+    def test_alpha_J_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[0]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_J_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[1]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_J_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[2]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_J_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[3]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_J_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[4]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_J_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[5]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[6]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[7]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[8]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[9]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[10]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_C_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[11]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_O_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[12]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_O_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[13]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_O_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[14]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[15]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[16]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[17]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[18]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[19]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_K_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[20]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AB_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[21]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AB_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[22]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_H_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[23]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_H_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[24]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_M_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[25]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_M_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[26]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[27]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[28]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[29]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[30]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[31]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_V_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[32]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[33]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_1_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[34]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_1_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[35]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[36]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[37]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_F_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[38]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AA_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[39]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AA_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[40]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AA_2_depth2(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[41]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AA_2_depth3(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[42]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_N_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[43]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_N_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[44]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_A_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[45]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_A_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[46]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_B_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[47]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_B_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[48]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_S_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[49]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_S_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[50]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_O_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[51]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AD_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[52]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AD_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[53]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AB_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[54]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_H_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[55]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_M_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[56]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_T_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[57]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_T_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[58]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_R_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[59]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_R_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[60]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_P_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[61]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_P_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[62]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+        # Given wrong move !?
+        # def test_alpha_X_1_depth1(self):
+        #    b_board = board()
+        #    b_board.screen = ()
+        #    boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[63]
+        #    t_board = testingBoard(boardd, stell, fen, moves)
+        #    move = returnAlphaBetaMove(b_board, t_board, depth)
+        #    sq, dest = move
+        #    b_board.moveZa(sq, dest)
+        #    self.assertIn(move, t_board.moves)
+        # def test_alpha_X_2_depth1(self):
+        #    b_board = board()
+        #    b_board.screen = ()
+        #    boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[64]
+        #    t_board = testingBoard(boardd, stell, fen, moves)
+        #    move = returnAlphaBetaMove(b_board, t_board, depth)
+        #    sq, dest = move
+        #    b_board.moveZa(sq, dest)
+        #    self.assertIn(move, t_board.moves)
+
+    def test_alpha_AF_1_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[65]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
+    def test_alpha_AF_2_depth1(self):
+        b_board = board()
+        b_board.screen = ()
+        boardd, stell, depth, fen, moves = allBoardsForAlphaBetaSuche()[66]
+        t_board = testingBoard(boardd, stell, fen, moves)
+        move = returnAlphaBetaMove(b_board, t_board, depth)
+        sq, dest = move
+        b_board.moveZa(sq, dest)
+        self.assertIn(move, t_board.moves)
+
 class testingBoard():
     def __init__(self, name, stell, fen, moves):
         self.name = name
@@ -460,10 +1178,27 @@ class testingBoard():
             self.kingSideCastle_black, self.queenSideCastle_black, \
             self.enPassent, self.halfMoveClock, self.fullMoveClock, self.hilfsboard = FENtoBoard(fen)
 
+def returnAlphaBetaMove(b_board, t_board, depth):
+    b_board.board = t_board.board
+    b_board.boardInteger = np.array(t_board.hilfsboard)
+    b_board.positions()
+    b_board.blackKing = t_board.kingBlack
+    if t_board.kingBlack.position != (0, 4):
+        b_board.blackKing.king_moved = True
+    b_board.whiteKing = t_board.kingWhite
+    if t_board.kingWhite.position != (7, 4):
+        b_board.whiteKing.king_moved = True
+    if t_board.color == 'black':
+        b_board.Anzahlmoves += 1
+
+    bewertung, path = alpha_beta(b_board, depth, float('-inf'), float('inf'), True)
+    move = path[0].lastmove
+    return move
+
 def returnAllMoves(b_board, t_board):
     b_board.board = t_board.board
     b_board.boardInteger = np.array(t_board.hilfsboard)
-    chessBoardVisualize(b_board.boardInteger)
+    #chessBoardVisualize(b_board.boardInteger)
     #print(b_board.boardInteger)
     b_board.positions()
     b_board.blackKing = t_board.kingBlack
@@ -486,7 +1221,7 @@ def returnAllMoves(b_board, t_board):
                     possible_move = ((row, col), move)
                     list_of_possible_moves.append(possible_move)
 
-    print(list_of_possible_moves)
+    #print(list_of_possible_moves)
     return list_of_possible_moves
 
 
@@ -515,46 +1250,46 @@ def FENtoBoard(FEN):
             i += 1
             j = 0
         elif char == 'p':
-            board[i][j] = Pawn('black',"sPion")
+            board[i][j] = Pawn('black',"sPion",(i,j))
             j += 1
         elif char == 'n':
-            board[i][j] = Knight('black',"sAt")
+            board[i][j] = Knight('black',"sAt",(i,j))
             j += 1
         elif char == 'b':
-            board[i][j] = (Bishop('black',"sFil"))
+            board[i][j] = (Bishop('black',"sFil",(i,j)))
             j += 1
         elif char == 'r':
-            board[i][j] = (Rook('black',"sK"))
+            board[i][j] = (Rook('black',"sK",(i,j)))
             #print("Found a black rook: ", (i,j))
             rookPositions.append((i,j))
             j += 1
         elif char == 'q':
-            board[i][j] = (Queen('black',"sV"))
+            board[i][j] = (Queen('black',"sV",(i,j)))
             j += 1
         elif char == 'k':
-            board[i][j] = (King('black', "sSah"))
+            board[i][j] = (King('black', "sSah",(i,j)))
             kingBlack = board[i][j]
             j += 1
         elif char == 'N':
-            board[i][j] = (Knight('white', "bAt"))
+            board[i][j] = (Knight('white', "bAt",(i,j)))
             j += 1
         elif char == 'B':
-            board[i][j] = (Bishop('white', "bFil"))
+            board[i][j] = (Bishop('white', "bFil",(i,j)))
             j += 1
         elif char == 'R':
-            board[i][j] = (Rook('white', "bK"))
+            board[i][j] = (Rook('white', "bK",(i,j)))
             #print("Found a white rook: ", (i, j))
             rookPositions.append((i, j))
             j += 1
         elif char == 'Q':
-            board[i][j] = (Queen('white', "bV"))
+            board[i][j] = (Queen('white', "bV",(i,j)))
             j += 1
         elif char == 'K':
-            board[i][j] = (King('white', "bSah"))
+            board[i][j] = (King('white', "bSah",(i,j)))
             kingWhite = board[i][j]
             j += 1
         elif char == 'P':
-            board[i][j] = (Pawn('white', "bPion"))
+            board[i][j] = (Pawn('white', "bPion",(i,j)))
             j += 1
         elif char.isdigit():
             j += int(char)
@@ -746,7 +1481,7 @@ def alpha_beta(node, depth, alpha, beta, is_max, path=[]):
                 best_value = value
                 best_path = child_path
             if best_value >= beta: # Beta-Cutoff
-                print("BetaCutoff!")
+                #print("BetaCutoff!")
                 break
         return best_value, best_path
     else:
@@ -759,7 +1494,7 @@ def alpha_beta(node, depth, alpha, beta, is_max, path=[]):
                 best_value = value
                 best_path = child_path
             if best_value <= alpha: # Alpha-Cutoff
-                print("AlphaCutoff!")
+                #print("AlphaCutoff!")
                 break
         return best_value, best_path
 
@@ -855,6 +1590,110 @@ def allBoards():
               ("M", 2, "2bk2q1/8/8/8/8/8/2Q5/2R3K1 w - - 0 1", 6),
               ("Z", 1, "r1b1kb2/p2qp1pr/n1pp1n1p/1P3p2/5P1P/BPN4R/P2PP1P1/R2QKBN1 w", 33),#Kalıyo düzeltildi
               ("Z", 2, "8/3k4/8/3r4/8/3Q4/8/3K4 w", 8),
+              ]
+    return boards
+
+def allBoardsForAlphaBetaSuche():
+    boards = [
+              ("J", 1, 1, "2k5/6q1/3P1P2/4N3/8/1K6/8/8 w - - 0 1", [((2, 5), (1, 6))]),
+              ("J", 1, 2, "2k5/6q1/3P1P2/4N3/8/1K6/8/8 w - - 0 1", [((2, 5), (1, 6))]),
+              ("J", 1, 3, "2k5/6q1/3P1P2/4N3/8/1K6/8/8 w - - 0 1", [((5, 1), (4, 2))]),
+
+              ("J", 2, 1, "k7/8/3p4/4q3/3P4/8/4Q3/K7 w - - 0 1", [((4, 3), (3, 4)), ((6, 4), (3, 4))]),
+              ("J", 2, 2, "k7/8/3p4/4q3/3P4/8/4Q3/K7 w - - 0 1", [((4, 3), (3, 4))]),
+              ("J", 2, 3, "k7/8/3p4/4q3/3P4/8/4Q3/K7 w - - 0 1", [((6, 4), (2, 0)), ((6, 4), (5, 5)), ((6, 4), (6, 0)), ((6, 4), (6, 6))]),
+
+              ("C", 1, 1, "rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3", [((1, 3), (2, 3))]),
+              ("C", 1, 2, "rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3", [((0, 1), (2, 2))]),
+              ("C", 1, 3, "rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3", [((2, 0), (3, 0))]),
+
+              ("C", 2, 1, "r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1 b - - 0 1", [((1, 2), (0, 3))]),
+              ("C", 2, 2, "r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1 b - - 0 1", [((2, 2), (0, 3))]),
+              ("C", 2, 3, "r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1 b - - 0 1", [((2, 2), (0, 3))]),
+
+              ("O", 1, 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", [((0, 0), (0, 2))]),
+              ("O", 1, 2, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", [((0, 3), (3, 0))]),
+              ("O", 1, 3, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", [((2, 2), (3, 0))]),
+              # Q atladım
+              ("K", 1, 1, "4k3/p7/8/8/1P2N1p1/8/6r1/3K4 w", [((4, 1), (3, 1))]),
+              ("K", 1, 2, "4k3/p7/8/8/1P2N1p1/8/6r1/3K4 w", [((4, 4), (2, 3)), ((4, 4), (2, 5))]),
+              ("K", 1, 3, "4k3/p7/8/8/1P2N1p1/8/6r1/3K4 w", [((4, 4), (2, 5))]),
+
+              ("K", 2, 1, "4k3/p7/7n/8/K5P1/2r5/P5P1/8 w", [((6, 0), (5, 0)), ((6, 6), (5, 6)), ((4, 6), (3, 6))]),
+              ("K", 2, 2, "4k3/p7/7n/8/K5P1/2r5/P5P1/8 w", [((6, 0), (5, 0)), ((6, 6), (5, 6)), ((4, 6), (3, 6))]),
+              ("K", 2, 3, "4k3/p7/7n/8/K5P1/2r5/P5P1/8 w", [((4, 0), (4, 1)), ((4, 6), (3, 6))]),
+
+              # L Atladım
+              ("AB", 2, 1, "rnb1kbnr/p6p/Bp4p1/8/Q4p2/N2qBN2/PP3PPP/R3K2R b kq - 0 1", [((2, 1), (3, 1))]),
+              ("AB", 2, 2, "rnb1kbnr/p6p/Bp4p1/8/Q4p2/N2qBN2/PP3PPP/R3K2R b kq - 0 1", [((0, 2), (1, 3))]),
+
+              ("H", 1, 1, "rn1qr1k1/1pp2ppp/p2bbn2/3p4/3P1B2/2NB1N2/PPPQ1PPP/2KR3R w - - 0 10", [((4, 5), (2, 3))]),
+              ("H", 1, 2, "rn1qr1k1/1pp2ppp/p2bbn2/3p4/3P1B2/2NB1N2/PPPQ1PPP/2KR3R w - - 0 10", [((5, 5), (3, 6))]),
+
+              ("M", 2, 1, "r1bq1rk1/ppp2ppp/2n1pn2/2b5/2P5/2N1PN2/PPQ2PPP/R1B1KB1R w KQ - 0 11", [((6, 0), (5, 0))]),
+              ("M", 2, 3, "r1bq1rk1/ppp2ppp/2n1pn2/2b5/2P5/2N1PN2/PPQ2PPP/R1B1KB1R w KQ - 0 11", [((6, 1), (5, 1))]),
+              # G atladım
+              # I atladım
+              ("V", 1, 1, "r3r1k1/p4ppp/2Q1b3/4N3/5q2/4RP2/PPB3PP/R5K1 w - - 0 1", [((2, 2), (5, 2))]),
+              ("V", 1, 2, "r3r1k1/p4ppp/2Q1b3/4N3/5q2/4RP2/PPB3PP/R5K1 w - - 0 1", [((2, 2), (4, 4))]),
+              ("V", 1, 3, "r3r1k1/p4ppp/2Q1b3/4N3/5q2/4RP2/PPB3PP/R5K1 w - - 0 1", [((7, 0), (7, 4))]),
+
+              ("V", 2, 1, "r3k2r/p2n1ppp/2p5/1pN1p1B1/8/3PnP2/PP4PP/R3K2R b KQkq - 0 16", [((5, 4), (6, 6))]),
+              ("V", 2, 2, "r3k2r/p2n1ppp/2p5/1pN1p1B1/8/3PnP2/PP4PP/R3K2R b KQkq - 0 16", [((5, 4), (6, 6))]),
+              ("V", 2, 3, "r3k2r/p2n1ppp/2p5/1pN1p1B1/8/3PnP2/PP4PP/R3K2R b KQkq - 0 16", [((5, 4), (6, 2))]),
+
+              ("F", 1, 1, "rnbqk2r/ppppppbp/5np1/8/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 2 4", [((2, 5), (3, 3))]),
+              ("F", 1, 2, "rnbqk2r/ppppppbp/5np1/8/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 2 4", [((0, 4), (0, 6))]),
+              ("F", 1, 3, "rnbqk2r/ppppppbp/5np1/8/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 2 4", [((0, 1), (2, 2))]),
+
+              ("F", 2, 1, "3r2k1/p6p/6p1/4b3/2P5/8/P1K3PP/5R2 w - - 5 27", [((7, 5), (1, 5))]),
+              ("F", 2, 2, "3r2k1/p6p/6p1/4b3/2P5/8/P1K3PP/5R2 w - - 5 27", [((6, 2), (7, 1))]),
+              ("F", 2, 3, "3r2k1/p6p/6p1/4b3/2P5/8/P1K3PP/5R2 w - - 5 27", [((6, 6), (5, 6))]),
+
+              ("AA", 1, 1, "5rk1/1p4pp/2R1p3/p5Q1/P4P2/6qr/2n3PP/5RK1 w - - 0 1", [((6, 7), (5, 6))]),
+              ("AA", 2, 1, "5r1k/2p5/4R3/2N3np/1b4p1/6P1/2Q4P/2K5 b - - 0 1", [((4, 1), (5, 0))]),
+              ("AA", 2, 2, "5r1k/2p5/4R3/2N3np/1b4p1/6P1/2Q4P/2K5 b - - 0 1", [((4, 1), (5, 0))]),
+              ("AA", 2, 3, "5r1k/2p5/4R3/2N3np/1b4p1/6P1/2Q4P/2K5 b - - 0 1", [((0, 5), (7, 5))]),
+
+       # Without depth specification
+
+            ("N", 1, 1, "r3kb1r/1p1nqp1p/p2p1np1/P1p1p3/2P1P3/2N1K1PP/1P1P1P2/R1BQ1B1R w kq - 1 11", [((7, 0), (7, 2))]),
+            ("N", 2, 1, "r1bqkbnr/p2ppppp/2p5/1p4N1/2B1P3/8/PPQP1PPP/RNB1K2R w KQkq b6 0 1", [((5, 4), (5, 5))]),
+
+            ("A", 1, 1, "r2qk2r/p1ppn1pp/bpnb1p2/4p3/4P3/2NPBN2/PPP1BPPP/R2Q1RK1 w Qkq", [((7, 0), (7, 2))]),
+            ("A", 2, 1, "8/1k6/1r3rp1/8/4R2P/2K5/3R4/8 w - -", [((5, 2), (5, 3))]),
+
+            ("B", 1, 1, "r2qk2r/pp1bp1bp/2np1np1/2pP4/2P1P3/2N2N2/PP3PPP/R1BQKB1R w - - 0 1", [((6, 7), (5, 7))]),
+            ("B", 2, 1, "4K3/4P1k1/8/8/8/8/7R/5r2 w - - 0 1", [((6, 7), (6, 4))]),
+
+            ("S", 1, 1, "rnb1kbnr/pppp1ppp/4pq2/6N1/8/2N5/PPPPPPPP/R1BQKB1R b KQkq 0 5", [((2, 5), (3, 6)), ((2, 5), (5, 2))]),
+            ("S", 2, 1, "r1b1kbnr/p2p1ppp/1p3q2/1BpNp3/4P3/3Q1N2/PPP2PPP/R1B1K2R w KQkq 0 7", [((3, 3), (2, 5))]),
+
+            ("O", 2, 1, "r4rk1/1bp1qp1p/p2p1np1/2nPp3/2P1P3/1PN2N2/PB1Q1PPP/R3K2R w KQ - 2 14", [((6, 3), (5, 4))]),
+
+            ("AD", 1, 1, "r2q1rk1/ppp2ppp/2n5/2b1PbN1/8/4p3/PPP3PP/RNBQR1K1 w - - 0 1", [((7, 3), (0, 3))]),
+            ("AD", 2, 1, "r3r1k1/p4ppp/1p1p4/2pP4/Q5bq/P1B1P3/1P3PPP/3R1RK1 b - - 1 21", [((6, 2), (4, 0))]),
+
+            ("AB", 1, 1, "rnbqk3/p6P/2n1p1P1/1r3p2/8/1PN1K3/P4P2/R1BQ1BNR w q - 0 1", [((1, 7), (0, 7))]),
+
+            ("H", 2, 1, "rq2kb1r/pbppp1p1/n4p1p/1p1n4/7P/1PP1PNPR/P1QP1P2/RNB1KB2 b Qkq - 2 9", [((3, 1), (4, 1))]),
+
+            ("M", 1, 1, "8/5P2/8/p4Kpp/6pk/P5p1/6P1/8 w - - 0 1", [((1, 5), (0, 5))]),
+
+            ("T", 1, 1, "2kr3r/pp2q3/2p2p2/3p4/3Pb3/5nPp/PPB2P1B/R2QR1K1 w - - 1 24", [((7, 3), (5, 5))]),
+            ("T", 2, 1, "1R6/6n1/4p3/3p3P/6P1/3nk3/1p6/6K1 w - - 1 48", [((3, 7), (2, 7))]),
+
+            ("R", 1, 1, "rnbqk1nr/pp1p1ppp/2p5/2b1p1B1/8/3P1N2/PPP1PPPP/RN1QKB1R w KQkq - 0 1", [((3, 6), (0, 3))]),
+            ("R", 2, 1, "r3k3/p4ppp/n1p2q1n/2b1p1B1/4P3/N7/P1PQ2PP/K1R2B1R w Kq - 0 1", [((3, 6), (2, 5))]),
+
+            ("P", 1, 1, "r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w KQkq", [((5, 6), (4, 6))]),
+            ("P", 2, 1, "8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34", [((2, 6), (0, 5))]),
+
+            ("X", 1, 1, "r2qkb1r/p1p2ppp/5n2/1p1P4/3Q4/2N2P2/PPP2P1P/R3KB1R", [((7, 5), (3, 1))]),
+            ("X", 2, 1, "r2qkb1r/ppp2ppp/2np1n2/8/3pP3/2N1BP2/PPP2P1P/R2QKB1R", [((5, 4), (4, 3))]),
+
+            ("AF", 1, 1, "r1bqk1nr/8/2n3P1/p1bP3p/3pPPQ1/p1N5/8/R1B1KBNR b KQkq - 0 1", [((0, 2), (4, 6))]),
+            ("AF", 2, 1, "rnbqkbnr/p1pppppp/8/1p6/Q7/2P5/PP1PPPPP/RNB1KBNR w KQkq - 0 1", [((4, 0), (3, 1))]),
               ]
     return boards
 

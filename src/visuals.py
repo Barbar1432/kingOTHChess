@@ -11,7 +11,7 @@ class drag_n_drop_visual:
         self.clickedName = None
         self.clickedPos = ()
 
-    def visualize(self, event_type, b_board):
+    def visualize(self, event_type, b_board, screen):
         if event_type == 1:  # MOUSEBUTTONDOWN equals 1
             mouse_pos = pygame.mouse.get_pos()
             col, row = mouse_pos
@@ -37,10 +37,10 @@ class drag_n_drop_visual:
                 self.clicked = False
         if len(self.sec) == 2:
             b_board.moveZa(self.sec[0], self.sec[1])
-            b_board.draw(self.clicked, self.clickedName, self.clickedPos)
+            b_board.draw(self.clicked, self.clickedName, self.clickedPos, screen)
             self.sec = []
             self.clickedPos = ()
-        b_board.draw(self.clicked, self.clickedName, self.clickedPos)
+        b_board.draw(self.clicked, self.clickedName, self.clickedPos, screen)
 
 
 def background(screen, b_board):

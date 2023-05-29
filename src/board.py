@@ -48,8 +48,10 @@ class board :
              [2011, 2001, 2010, 2110, 2111, 2010, 2001, 2011]])
          self.square_size = 64
          self.screen_size = (self.square_size * 8, self.square_size * 8)
-         self.screen = pygame.display.set_mode(self.screen_size)
          self.lastmove = ()
+         self.blackpawn = (False, (-1, -1))  # (Promotion Panel - Promoted Pawns Coordinates)
+         self.whitepawn = (False, (-1, -1))  # (Promotion Panel - Promoted Pawns Coordinates)
+         self.botplaying = (False, 'black')  # (is Bot Active - Bots color)
          self.eatenPiecesWhite = []
          self.eatenPiecesBlack = []
          self.dislocation_count_row = 100  # Dikey
@@ -57,7 +59,7 @@ class board :
 
 
 
-    def draw_board(self, booly, name, clickedpos):
+    def draw_board(self, booly, name, clickedpos, screen):
          colors = [(255, 206, 158), (209, 139, 71)]
 
          for row in range(8):
@@ -65,43 +67,43 @@ class board :
 
                  color = colors[(row + col) % 2]
                  rect = pygame.Rect(col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row, self.square_size, self.square_size)
-                 pygame.draw.rect(self.screen, color, rect)
+                 pygame.draw.rect(screen, color, rect)
                  if self.board[row][col] != None:  # Print the piece on the board
                      piece_image = pygame.image.load('images/' + self.board[row][col].name + '.png')
                      piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
-                     self.screen.blit(piece_image, rect)
+                     screen.blit(piece_image, rect)
          #DRAW THE HILL SHADOW
          trans_color = get_color("shadow")
          orange_color = get_color("orange")
          #UP
-         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+         pygame.gfxdraw.box(screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
                                                      3 * self.square_size - 10 + self.dislocation_count_row,
                                                      2 * self.square_size + 20, 10), trans_color)
          #DOWN
-         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+         pygame.gfxdraw.box(screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
                                                      5 * self.square_size + self.dislocation_count_row,
                                                      2 * self.square_size + 20, 10), trans_color)
          #LEFT
-         pygame.gfxdraw.box(self.screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
+         pygame.gfxdraw.box(screen, pygame.Rect(3 * self.square_size - 10 + self.dislocation_count_col,
                                                      3 * self.square_size + self.dislocation_count_row,
                                                      10, 2 * self.square_size), trans_color)
          #RIGHT
-         pygame.gfxdraw.box(self.screen, pygame.Rect(5 * self.square_size + self.dislocation_count_col,
+         pygame.gfxdraw.box(screen, pygame.Rect(5 * self.square_size + self.dislocation_count_col,
                                                      3 * self.square_size + self.dislocation_count_row,
                                                      10, 2 * self.square_size), trans_color)
          if self.lastmove != ():
              sqSelected, sqDest = self.lastmove
              sqSelectedRow, sqSelectedCol = sqSelected
              sqDestRow, sqDestCol = sqDest
-             pygame.gfxdraw.box(self.screen, pygame.Rect(sqSelectedCol * self.square_size + self.dislocation_count_col,
+             pygame.gfxdraw.box(screen, pygame.Rect(sqSelectedCol * self.square_size + self.dislocation_count_col,
                                       sqSelectedRow * self.square_size + self.dislocation_count_row, self.square_size,
                                       self.square_size), orange_color)
-             pygame.gfxdraw.box(self.screen, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
+             pygame.gfxdraw.box(screen, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
                                         sqDestRow * self.square_size + self.dislocation_count_row, self.square_size,
                                         self.square_size), orange_color)
              piece_image = pygame.image.load('images/' + self.board[sqDestRow][sqDestCol].name + '.png')
              piece_image = pygame.transform.scale(piece_image, (self.square_size, self.square_size))
-             self.screen.blit(piece_image, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
+             screen.blit(piece_image, pygame.Rect(sqDestCol * self.square_size + self.dislocation_count_col,
                                         sqDestRow * self.square_size + self.dislocation_count_row, self.square_size,
                                         self.square_size))
 
@@ -115,7 +117,7 @@ class board :
              for bubble in listBub:
                  if (self.isLegal(clickedpos, bubble)):
                      bub_row, bub_col = bubble
-                     pygame.draw.circle(self.screen, colorBub,
+                     pygame.draw.circle(screen, colorBub,
                                         (bub_col * self.square_size + self.dislocation_count_col + 32,
                                          bub_row * self.square_size + self.dislocation_count_row + 32),
                                         10)
@@ -129,9 +131,149 @@ class board :
              pos1 = pos1 - self.dislocation_count_row
              pos2 = pos2 - self.dislocation_count_col
             # Clicked tile lit green
-             self.screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
-             self.screen.blit(clicked_image, (pos1-30 + self.dislocation_count_row, pos2-30 + self.dislocation_count_col))
+             screen.blit(transparent_screen, (col * self.square_size + self.dislocation_count_col, row * self.square_size + self.dislocation_count_row))
+             screen.blit(clicked_image, (pos1-30 + self.dislocation_count_row, pos2-30 + self.dislocation_count_col))
 
+         if self.blackpawn[0]:  # Black pawn got to the opposite border - Show panel
+             pygame.draw.rect(screen, get_color("outline1"),
+                              pygame.Rect(20, 6 * self.square_size + 16,
+                                          self.square_size + 28, 3 * self.square_size + 20))
+             pygame.draw.rect(screen, get_color("background"),
+                              pygame.Rect(30, 6 * self.square_size + 26,
+                                          self.square_size + 12, 3 * self.square_size))
+             font = pygame.font.SysFont("fonts/PublicPixel.ttf", 22)
+             text = font.render("Select", False, get_color("text"))
+             imgK = pygame.image.load('images/sK.png')
+             imgK = pygame.transform.scale(imgK, (32, 32))
+             rectK = imgK.get_rect()
+             rectK.topleft = (52, 6 * self.square_size + 52)
+             imgAt = pygame.image.load('images/sAt.png')
+             imgAt = pygame.transform.scale(imgAt, (32, 32))
+             rectAt = imgAt.get_rect()
+             rectAt.topleft = (52, 6 * self.square_size + 52 + 40)
+             imgFil = pygame.image.load('images/sFil.png')
+             imgFil = pygame.transform.scale(imgFil, (32, 32))
+             rectFil = imgFil.get_rect()
+             rectFil.topleft = (52, 6 * self.square_size + 52 + 80)
+             imgV = pygame.image.load('images/sV.png')
+             imgV = pygame.transform.scale(imgV, (32, 32))
+             rectV = imgV.get_rect()
+             rectV.topleft = (52, 6 * self.square_size + 52 + 120)
+             screen.blit(text, (46, 6 * self.square_size + 32))
+             screen.blit(imgK, (52, 6 * self.square_size + 52))
+             screen.blit(imgAt, (52, 6 * self.square_size + 52 + 40))
+             screen.blit(imgFil, (52, 6 * self.square_size + 52 + 80))
+             screen.blit(imgV, (52, 6 * self.square_size + 52 + 120))
+
+             pos = pygame.mouse.get_pos()
+             row, col = self.blackpawn[1]
+             if rectK.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Kale")
+                     piece = Rook('black', "sK", (row, col))
+                     piece.rook_moved = True
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 1011
+                     self.blackpawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectAt.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked At")
+                     piece = Knight('black', "sAt", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 1001
+                     self.blackpawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectFil.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Fil")
+                     piece = Bishop('black', "sFil", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 1010
+                     self.blackpawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectV.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Vezir")
+                     piece = Queen('black', "sV", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 1110
+                     self.blackpawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+         if self.whitepawn[0]:  # White pawn got to the opposite border - Show panel
+             pygame.draw.rect(screen, get_color("outline1"),
+                              pygame.Rect(20, self.square_size + 32,
+                                          self.square_size + 28, 3 * self.square_size + 20))
+             pygame.draw.rect(screen, get_color("background"),
+                              pygame.Rect(30, self.square_size + 42,
+                                          self.square_size + 12, 3 * self.square_size))
+             font = pygame.font.SysFont("fonts/PublicPixel.ttf", 22)
+             text = font.render("Select", False, get_color("text"))
+             imgK = pygame.image.load('images/bK.png')
+             imgK = pygame.transform.scale(imgK, (32, 32))
+             rectK = imgK.get_rect()
+             rectK.topleft = (52, 2 * self.square_size)
+             imgAt = pygame.image.load('images/bAt.png')
+             imgAt = pygame.transform.scale(imgAt, (32, 32))
+             rectAt = imgAt.get_rect()
+             rectAt.topleft = (52, 2 * self.square_size + 40)
+             imgFil = pygame.image.load('images/bFil.png')
+             imgFil = pygame.transform.scale(imgFil, (32, 32))
+             rectFil = imgFil.get_rect()
+             rectFil.topleft = (52, 2 * self.square_size + 80)
+             imgV = pygame.image.load('images/bV.png')
+             imgV = pygame.transform.scale(imgV, (32, 32))
+             rectV = imgV.get_rect()
+             rectV.topleft = (52, 2 * self.square_size + 120)
+             screen.blit(text, (46, self.square_size + 48))
+             screen.blit(imgK, (52, 2 * self.square_size))
+             screen.blit(imgAt, (52, 2 * self.square_size + 40))
+             screen.blit(imgFil, (52, 2 * self.square_size + 80))
+             screen.blit(imgV, (52, 2 * self.square_size + 120))
+
+             pos = pygame.mouse.get_pos()
+             row, col = self.whitepawn[1]
+             if rectK.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Kale")
+                     piece = Rook('white', "bK", (row, col))
+                     piece.rook_moved = True
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 2011
+                     self.whitepawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectAt.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked At")
+                     piece = Knight('white', "bAt", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 2001
+                     self.whitepawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectFil.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Fil")
+                     piece = Bishop('white', "bFil", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 2010
+                     self.whitepawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
+             if rectV.collidepoint(pos):
+                 if pygame.mouse.get_pressed()[0] == 1:
+                     print("Clicked Vezir")
+                     piece = Queen('white', "bV", (row, col))
+                     piece.position = (row, col)
+                     self.board[row][col] = piece
+                     self.boardInteger[row][col] = 2110
+                     self.whitepawn = (False, (-1, -1))
+                     self.Anzahlmoves += 1
          if self.eatenPiecesBlack is not [] or self.eatenPiecesWhite is not []:
              listBlack = list(self.eatenPiecesBlack)
              listWhite = list(self.eatenPiecesWhite)
@@ -155,9 +297,9 @@ class board :
                  if j != 0 and j % 4 == 0:
                      k += 34
                      i = 0
-                 self.screen.blit(img, (self.dislocation_count_col + self.square_size * 8 + 23 + i,
+                 screen.blit(img, (self.dislocation_count_col + self.square_size * 8 + 23 + i,
                                         self.dislocation_count_row + self.square_size * 4 + 24 + k))
-                 self.screen.blit(turnText, (self.dislocation_count_col + self.square_size * 8 + 23 + text_dislocation_b + i,
+                 screen.blit(turnText, (self.dislocation_count_col + self.square_size * 8 + 23 + text_dislocation_b + i,
                                         self.dislocation_count_row + self.square_size * 4 + 24 + 28 + k)) #  28 - Text mesafe
                  i += 28
                  j += 1
@@ -171,16 +313,16 @@ class board :
                  if m != 0 and m % 4 == 0:
                      n += 34
                      l = 0
-                 self.screen.blit(img, (self.dislocation_count_col + self.square_size * 10 + 26 + l,
+                 screen.blit(img, (self.dislocation_count_col + self.square_size * 10 + 26 + l,
                                         self.dislocation_count_row + self.square_size * 4 + 24 + n))
-                 self.screen.blit(turnText, (self.dislocation_count_col + self.square_size * 10 + 26 + text_dislocation_w + l,
+                 screen.blit(turnText, (self.dislocation_count_col + self.square_size * 10 + 26 + text_dislocation_w + l,
                                              self.dislocation_count_row + self.square_size * 4 + 24 + 28 + n))  # 28 - Text mesafe
                  l += 28
                  m += 1
 
 
-    def draw(self, booly, name, clickedpos):
-        self.draw_board(booly, name, clickedpos)
+    def draw(self, booly, name, clickedpos, screen):
+        self.draw_board(booly, name, clickedpos, screen)
         pygame.display.flip()
 
     def positions(self):
@@ -276,7 +418,6 @@ class board :
         else :
             return True
     def bewertungsFunktion(self):
-
         whitePoints = 0
         blackPoints = 0
         center = [(3,4), (4,4), (3,3), (4,3)]
@@ -286,7 +427,7 @@ class board :
         for row, col in zip(row_indices, col_indices):
             piece = self.board[row][col]
             if isinstance(piece, King) and piece.color == "white" and self.Anzahlmoves >= 12:
-               whitePoints +=piece.PST_white_midGame
+               whitePoints +=piece.PST_white_midGame[row][col]
                continue
             whitePoints += piece.PST_white[row][col]
             if(isinstance(piece, Pawn)):
@@ -301,7 +442,7 @@ class board :
         for r, c in zip(rindices, cindices):
             piece = self.board[r][c]
             if isinstance(piece, King) and piece.color == "black" and self.Anzahlmoves >= 12:
-                blackPoints +=piece.PST_black_midGame
+                blackPoints +=piece.PST_black_midGame[row][col]
                 continue
             blackPoints += piece.PST_black[r][c]
             if (isinstance(piece, Pawn)):
@@ -313,6 +454,8 @@ class board :
                 continue
             blackPoints += piece.point
         bewertung = (whitePoints - blackPoints)
+        if self.botplaying[1] == 'black':
+            bewertung *= -1
         return bewertung
 
 
@@ -387,7 +530,39 @@ class board :
 
                     piece.position = (row_dest, col_dest)
                     print(self.bewertungsFunktion())
-                    self.Anzahlmoves+= 1
+                    # Pawn Promotion: white Pawn got to the opposite border:
+                    if isinstance(piece, Pawn) and piece.position[0] == 0:
+                        # No Bot Active:
+                        if not self.botplaying[0]:
+                            self.whitepawn = (True, piece.position)
+                        # Bot is active but not their turn
+                        if self.botplaying[0] and not self.botplaying[1] == 'white':
+                            self.whitepawn = (True, piece.position)
+                        # Bot is active and their turn
+                        elif self.botplaying[0] and self.botplaying[1] == 'white':
+                            piece = Queen('white', "bV")
+                            piece.position = (row_dest, col_dest)
+                            self.board[row_dest][col_dest] = piece
+                            self.boardInteger[row_dest][col_dest] = 2110
+
+                    # Pawn Promotion: black Pawn got to the opposite border:
+                    if isinstance(piece, Pawn) and piece.position[0] == 7:
+                        # No Bot Active:
+                        if not self.botplaying[0]:
+                            self.blackpawn = (True, piece.position)
+                        # Bot is active but not their turn
+                        if self.botplaying[0] and not self.botplaying[1] == 'black':
+                            self.blackpawn = (True, piece.position)
+                        # Bot is active and their turn
+                        elif self.botplaying[0] and self.botplaying[1] == 'black':
+                            piece = Queen('black', "sV")
+                            piece.position = (row_dest, col_dest)
+                            self.board[row_dest][col_dest] = piece
+                            self.boardInteger[row_dest][col_dest] = 1110
+                    if not (self.whitepawn[0] or self.blackpawn[0]):
+                        self.Anzahlmoves += 1
+
+                    # Castling: King wants to castle
                     #print(self.Anzahlmoves)
                     if isinstance(piece, King):
                         if piece.position == (4,3) or piece.position == (3,3) or piece.position == (3,4) or piece.position == (4,4):

@@ -36,17 +36,19 @@ btimer = timer()
 btimer.turn = False
 
 dummy = bot() # Welcome to life dummy
-dummy.ai_bool = False # Decide if you want to play against a bot
+dummy.ai_bool = True # Decide if you want to play against a bot
 dummy.color = 'black'  # Decide bots color
+board.botplaying = (dummy.ai_bool, dummy.color)
 
 event_type = 0
 board.positions()
 while running:
-    import time
-    import math
 
 
-    def call_alpha_beta_every_two_minutes():
+    """ 
+        import time
+        import math
+        def call_alpha_beta_every_two_minutes():
         start_time = time.time()
         while True:
             current_time = time.time()
@@ -54,7 +56,7 @@ while running:
                 # Call the alpha_beta function here
                 board.alpha_beta(board, 2, -math.inf, math.inf, True)
                 start_time = time.time()  # Reset the start time
-
+    """
 
     if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
         dummy.random_move(dummy.ai_bool, board)
@@ -66,13 +68,13 @@ while running:
                 and (board.dislocation_count_row <= y <= 512 + board.dislocation_count_row):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and len(visuals.sec) == 0:
                 event_type = 1
-                visuals.visualize(event_type, board)
+                visuals.visualize(event_type, board, deneme_screen)
                 event_type = -1
             if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
                 event_type = 0
                 # TODO: TEST IF THIS IS POSSIBLE MOVE IF NOT - NOT ALLOWED TO MOVE, RETURN BACK TO OLD POS
                 # TODO: Change the value of player_turn when one of the opponent makes the move
-                visuals.visualize(event_type, board)
+                visuals.visualize(event_type, board, deneme_screen)
                 event_type = -1
         if event.type == pygame.QUIT:
             running = False
@@ -83,7 +85,7 @@ while running:
     timer_black(deneme_screen, btimer, board)
     if board.Anzahlmoves % 2 == 1:   # DECREASE BLACK PLAYERS TIME WHILE PLAYING
         btimer.time -= 1
-    visuals.visualize(event_type, board)
+    visuals.visualize(event_type, board, deneme_screen)
     pygame.display.flip()
     clock.tick(60)
 
