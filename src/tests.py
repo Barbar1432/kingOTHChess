@@ -1190,6 +1190,8 @@ def returnAlphaBetaMove(b_board, t_board, depth):
         b_board.whiteKing.king_moved = True
     if t_board.color == 'black':
         b_board.Anzahlmoves += 1
+    if t_board.color == 'white':
+        b_board.botplaying = (False, 'white')
 
     bewertung, path = alpha_beta(b_board, depth, float('-inf'), float('inf'), True)
     move = path[0].lastmove

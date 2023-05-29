@@ -17,11 +17,15 @@ class bot:
 
     def random_move(self, ai_bool, board):
         if ai_bool:  # AI-Bot is active
-            bewertung, path = alpha_beta(board, 2, float('-inf'), float('inf'), True)
-            move = path[0].lastmove
-            print(move)
-            sq, dest = move
-            board.moveZa(sq, dest)
+            if not board.finished:
+                bewertung, path = alpha_beta(board, 2, float('-inf'), float('inf'), True)
+                move = path[0].lastmove
+                print(move)
+                sq, dest = move
+                board.moveZa(sq, dest)
+            else:
+                board.finished = True
+                print("Game Over")
 
 def generate_mini_boards(board):
 
@@ -42,7 +46,6 @@ def generate_mini_boards(board):
 def alpha_beta(node, depth, alpha, beta, is_max, path=[]):
     if depth == 0 or isTerminal(node):
 
-
         return node.bewertungsFunktion(), path
     if is_max:
         best_value = alpha
@@ -51,9 +54,6 @@ def alpha_beta(node, depth, alpha, beta, is_max, path=[]):
 
             child = copy_board(node)
             do_move_for_ab(child,move)
-
-
-
             # print("At child:", child.boardInteger)
             value, child_path = alpha_beta(child, depth - 1, best_value, beta, False, path + [child])
             if value > best_value:
