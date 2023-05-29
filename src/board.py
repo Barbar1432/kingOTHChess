@@ -4,6 +4,7 @@ from colors import get_color
 from piece import piece
 from piece import Rook, Knight, Bishop, Queen, King,Pawn
 import numpy as np
+import copy
 class board :
     def __init__(self):
          self.whiteKing = King("white","bSah",(0,0))
@@ -282,35 +283,35 @@ class board :
         black_positions = np.where(self.boardInteger < 1600)
         white_positions = np.where(self.boardInteger >= 2000)
         row_indices, col_indices = white_positions
-
         for row, col in zip(row_indices, col_indices):
             piece = self.board[row][col]
-            if(piece==Pawn):
+            if isinstance(piece, King) and piece.color == "white" and self.Anzahlmoves >= 12:
+               whitePoints +=piece.PST_white_midGame
+               continue
+            whitePoints += piece.PST_white[row][col]
+            if(isinstance(piece, Pawn)):
                 temp =self.board[row+1][col]
-                if (temp==Pawn):
+                if (isinstance(temp, Pawn)):
                     if (temp.color == "white"):
-                       whitePoints=whitePoints-5
-                whitePoints += 10
+                       whitePoints=whitePoints-10
+                whitePoints += 100
                 continue
-            if (piece.played):
-                whitePoints+=20
-            whitePoints += piece.point * 15
-            whitePoints = whitePoints + piece.PST_white[row][col]
+            whitePoints += piece.point
         rindices, cindices = black_positions
         for r, c in zip(rindices, cindices):
             piece = self.board[r][c]
-            if (piece == Pawn):
-                temp = self.board[r + 1][c]
-                if (temp == Pawn):
-                    if (temp.color == "black"):
-                        blackPoints = blackPoints - 5
-                blackPoints += 10
+            if isinstance(piece, King) and piece.color == "black" and self.Anzahlmoves >= 12:
+                blackPoints +=piece.PST_black_midGame
                 continue
-            if (piece.played):
-                blackPoints += 20
-            blackPoints += piece.point * 15
-            blackPoints = blackPoints + -1*piece.PST_black[r][c]
-
+            blackPoints += piece.PST_black[r][c]
+            if (isinstance(piece, Pawn)):
+                temp = self.board[r + 1][c]
+                if (isinstance(temp, Pawn)):
+                    if (temp.color == "black"):
+                        blackPoints = blackPoints - 10
+                blackPoints += 100
+                continue
+            blackPoints += piece.point
         bewertung = (whitePoints - blackPoints)
         return bewertung
 
@@ -357,7 +358,6 @@ class board :
 
 
            legalMoves = self.legalMoves()
-           #print(self.bewertungsFunktion())
            row, col = sqSelected
            piece = self.board[row][col]
            if isinstance(piece,Rook):
@@ -386,6 +386,7 @@ class board :
                     self.boardInteger[row_dest][col_dest] = self.mapping[piece.name]
 
                     piece.position = (row_dest, col_dest)
+                    print(self.bewertungsFunktion())
                     self.Anzahlmoves+= 1
                     #print(self.Anzahlmoves)
                     if isinstance(piece, King):
@@ -524,114 +525,63 @@ class board :
         #print("----------")
         return (right,left)
 
-    """
-         bu klasik alpha beta boyleydi hemen hemen şimdilik gptye bidaha yazdırttım anla diye kodun kalanını
-         """
-    def alpha_beta(self,board, depth, alpha, beta, is_max):
-        # if depth == 0 or isGameOver(board):
-           # return board_evaluation(board)
+    def undo_move(self, sqSelected, sqDest):
+        row, col = sqSelected
+        piece = self.board[row][col]
+        row_dest, col_dest = sqDest
+        self.board[row][col] = None
+        self.board[row_dest][col_dest] = piece
+        self.boardInteger[row][col] = 1600
+        self.boardInteger[row_dest][col_dest] = self.mapping[piece.name]
+        piece.position = (row_dest, col_dest)
+        self.Anzahlmoves = self.Anzahlmoves - 1
 
+    def alpha_beta(self, board, depth, alpha, beta, is_max):
+        if depth == 0 or self.isGameOver(board):
+            return board.bewertungsFunktion()
         if is_max:
-            best_value = float('-inf')
-            for child in self.createBoard(board,True):
-                value = self.alpha_beta(child, depth - 1, alpha, beta, False)
+            best_value = alpha
+            _, moves_list = board.legalMoves_alphaBeta(self.board,self.boardInteger,True)
+            for move in moves_list:
+                sq_selected, sq_dest = move
+                board.move(sq_selected, sq_dest)  # Apply the move to the current board
+                value = self.alpha_beta(board, depth - 1, best_value, beta, False)
+                board.undo_move(sq_selected, sq_dest)  # Undo the move to restore the board state
                 best_value = max(best_value, value)
-                alpha = max(alpha, best_value)
-                if alpha >= beta:
-                    # Alpha cutoff
+                if best_value >= beta:  # Beta-Cutoff
                     break
             return best_value
 
         else:
-            best_value = float('inf')
-            for child in self.createBoard(board,False):
-                value =self.alpha_beta(child, depth - 1, alpha, beta, True)
+            best_value = beta
+            _, moves_list = board.legalMoves_alphaBeta(self.board, self.boardInteger, False)
+            for move in moves_list:
+                sq_selected, sq_dest = move
+                board.move(sq_selected, sq_dest)  # Apply the move to the current board
+                value = self.alpha_beta(board, depth - 1, alpha, best_value, True)
+                board.undo_move(sq_selected, sq_dest)  # Undo the move to restore the board state
                 best_value = min(best_value, value)
-                beta = min(beta, best_value)
-                if beta <= alpha:
-                    # Beta cutoff
+                if best_value <= alpha:  # Alpha-Cutoff
                     break
             return best_value
 
+    def isGameOver(self):
+        # TODO: If no more possible moves - Stalemate
+        if self.finished:
+            return True
 
-    """
-        Abi şimdilik benim herşeyi tek boardda yapmaya calıstıgım implementasyonu rafakaldırdık. bu klasik bir sürü board generate etmeli
-        implementasyonu deneyelim tekrardan diye düşündüm. Onun içinde deepCpy kullanmak gerekiyor heralde. 
-        Boardu copyliyincede cok masraflı oluyo ondan bu numpy boardu copyleyemek daha mantıklı geldi. 
-        """
-    """
-     şimdi su sekil calısıyo bu once bitane IntegerBoard alıyo , o dalyarragı mecburen self.convert_board_integer_to_board
-     fonksiyonuyla normal bi boarda çeviriyo (legalMoves falan vb fonksiyonları kullanamıyoruz yoksa) sonra 20 tane legal move
-     varsa 20 tane board oluşturuyo hepsinde birer move oynanmış olarak
-     dipNot olarak " self.convert_board_integer_to_board fonksiyonuyla normal bi boarda çeviriyo" şimdi madem dondurcektik buna
-     ne manası oldu gibi bir düşünce var aklımda ama mesela en son depthtekilerin hiçbirini cevirmiyoruz 7 depthte bile 256 board 
-     yapıyor birde cutoffları falan dusununce yinede yapmaya deger gibi geldi .Board represantasyonunu terk edip boardIntegera gecebilsek
-     super olurdu aslında ama o cok iş gibi gozukuyor şimdilik piece classını falan epey degistirmemiz gerekir 
-     """
-    def createBoard (self,boardInt,isMax):
-         zaBoard =  self.convert_board_integer_to_board(boardInt)
-         legalMoves,moves= self.legalMoves_alphaBeta(zaBoard,isMax)
-         for move in moves:
-             start,dest = move
-             s_row ,s_col = start
-             d_row,d_col = dest
-             board = np.copy(boardInt)
-             pieceMoved =board[s_row][s_col]
-             board[s_row][s_col] = 1600
-             board[d_row][d_col] =pieceMoved
+    def move(self, sqSelected, sqDest):
+        row, col = sqSelected
+        piece = self.board[row][col]
+        row_dest, col_dest = sqDest
+        self.board[row][col] = None
+        self.board[row_dest][col_dest] = piece
+        self.boardInteger[row][col] = 1600
+        self.boardInteger[row_dest][col_dest] = self.mapping[piece.name]
+        piece.position = (row_dest, col_dest)
+        self.Anzahlmoves += 1
 
-    """
-    bu işte ismi zaten anlatıyo ne bok yaptıgını , yalnız pozisyon atamıyo galiba  Pawn('black', "sPion") lara pozisyon 
-    variablesinide ekleyebiliriz 
-     """
-
-    def convert_board_integer_to_board(self, boardInt, positions):
-        board = []
-        for i, row in enumerate(boardInt):
-            board_row = []
-            for j, value in enumerate(row):
-                position = positions[i][j]  # Get the position for the current piece
-
-                if value == 1000:
-                    piece = Pawn('black', "sPion", position)
-                elif value == 1011:
-                    piece = Rook('black', "sK", position)
-                elif value == 1001:
-                    piece = Knight('black', "sAt", position)
-                elif value == 1010:
-                    piece = Bishop('black', "sFil", position)
-                elif value == 1110:
-                    piece = Queen('black', "sV", position)
-                elif value == 1111:
-                    piece = King("black", "sSah", position)
-                elif value == 2000:
-                    piece = Pawn('white', "bPion", position)
-                elif value == 2011:
-                    piece = Rook('white', "bK", position)
-                elif value == 2001:
-                    piece = Knight('white', "bAt", position)
-                elif value == 2010:
-                    piece = Bishop('white', "bFil", position)
-                elif value == 2110:
-                    piece = Queen('white', "bV", position)
-                elif value == 2111:
-                    piece = King("white", "bSah", position)
-                else:
-                    piece = None
-
-                board_row.append(piece)
-            board.append(board_row)
-        return board
-
-    """
-     bunu surekli degisiklikler yaptıgım için ekledim kodun kalanında sıkıntılar oluyodu deneme tahtası gibi ama farkı su annlık
-     board parametresi alıyo bitane ( self.board) dısındakı seylerle pushlayabiliyoruz birde legalMOves dicionarysinin yanında normal 
-     moves diye tim legal moveları donduren bi liste de veriyor . birde buna işte kimin sırası olduguna dair bir parametre daha 
-     ekleyebiliriz yoksa siyahın sıralarını generate etcekken self.AnzahlMoves bu alpha betadan bagımsız oldugu için 
-     sorun cıkabilir 
-        """
-
-    def legalMoves_alphaBeta(self, board,isMax):
+    def legalMoves_alphaBeta(self, board,intBoard,isMax):
         legalMoves = {}
         moves = []
         black_positions = np.where(self.boardInteger < 1600)

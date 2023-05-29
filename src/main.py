@@ -42,6 +42,19 @@ dummy.color = 'black'  # Decide bots color
 event_type = 0
 board.positions()
 while running:
+    import time
+    import math
+
+
+    def call_alpha_beta_every_two_minutes():
+        start_time = time.time()
+        while True:
+            current_time = time.time()
+            if current_time - start_time >= 120:  # Check if two minutes have elapsed
+                # Call the alpha_beta function here
+                board.alpha_beta(board, 2, -math.inf, math.inf, True)
+                start_time = time.time()  # Reset the start time
+
 
     if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
         dummy.random_move(dummy.ai_bool, board)
