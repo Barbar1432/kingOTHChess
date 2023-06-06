@@ -418,6 +418,7 @@ class board :
         else :
             return True
     def bewertungsFunktion(self):
+        print(self.botplaying)
         whitePoints = 0
         blackPoints = 0
         center = [(3,4), (4,4), (3,3), (4,3)]
@@ -453,9 +454,12 @@ class board :
                 blackPoints += 100
                 continue
             blackPoints += piece.point
-        bewertung = (whitePoints - blackPoints)
-        if self.botplaying[1] == 'black':
-            bewertung *= -1
+        if self.botplaying[1] == 'white':
+            bewertung = (whitePoints - blackPoints)
+        elif self.botplaying[1] == 'black':
+            bewertung = (blackPoints - whitePoints)
+        else:
+            bewertung = (whitePoints - blackPoints)
         return bewertung
 
 
@@ -529,7 +533,7 @@ class board :
                     self.boardInteger[row_dest][col_dest] = self.mapping[piece.name]
 
                     piece.position = (row_dest, col_dest)
-                    print(self.bewertungsFunktion())
+                    # print(self.bewertungsFunktion())
                     # Pawn Promotion: white Pawn got to the opposite border:
                     if isinstance(piece, Pawn) and piece.position[0] == 0:
                         # No Bot Active:

@@ -105,7 +105,7 @@ def background(screen, b_board):
                                  10, 2 * b_board.square_size + 16))
 
 
-def timer_black(screen, timer_b, board):
+"""def timer_black(screen, timer_b, board):
     font = pygame.font.Font("fonts/PublicPixel.ttf", 15)
     # milliseconds = timer.time % 60
     seconds = (int(timer_b.time / 60)) % 60
@@ -139,4 +139,4 @@ def timer_white(screen, timer_w, board):
     screen.blit(timer_surface, (355, 128 + 64 * 8))
 class timer:
     def __init__(self):
-        self.time = 72000  # 20 Minutes
+        self.time = 72000  # 20 Minutes"""

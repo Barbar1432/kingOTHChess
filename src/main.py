@@ -1,14 +1,19 @@
 import time
-
+import multiprocessing as mp
 import pygame
 from board import board
-from visuals import drag_n_drop_visual, background, timer_white, timer_black, timer
+from visuals import drag_n_drop_visual, background
 from aibot import bot
+from timer import timer, visualizeTimers
 from tests import FENtoBoard
 # This is a sample Python script.
 
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+
+def screen():
+    global deneme_screen
+    deneme_screen = pygame.display.set_mode((1024,712))
 
 
 # Press the green button in the gutter to run the script.
@@ -22,74 +27,52 @@ if __name__ == '__main__':
     (enPassentSquareRow, enPassentSquareCol), halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(
     "1n1qkbnr/2pppppp/p7/p2P4/6Q1/8/PPPP1PPP/R1B1K1NR b KQk - 0 6")
     board.board = boardd"""
-pygame.init()
-pygame.font.init()
-deneme_screen = pygame.display.set_mode((1024,712))
-pygame.display.set_caption("King of the Hill")
-clock = pygame.time.Clock()
-running = True
-visuals = drag_n_drop_visual()
-player_turn = 1  # 1 == WHITE PLAYING ||  -1 == BLACK PLAYING
+    pygame.init()
+    pygame.font.init()
+    screen()
+    pygame.display.set_caption("King of the Hill")
+    clock = pygame.time.Clock()
+    running = True
+    visuals = drag_n_drop_visual()
+    player_turn = 1  # 1 == WHITE PLAYING ||  -1 == BLACK PLAYING
+    processChecker = 1  # 1 == Can start processing || -1 Can not start
+    wtimer = timer()
+    btimer = timer()
 
-wtimer = timer()
-btimer = timer()
-btimer.turn = False
-
-dummy = bot() # Welcome to life dummy
-dummy.ai_bool = True # Decide if you want to play against a bot
-dummy.color = 'black'  # Decide bots color
-board.botplaying = (dummy.ai_bool, dummy.color)
-
-event_type = 0
-board.positions()
-while running:
-
-
-    """ 
-        import time
-        import math
-        def call_alpha_beta_every_two_minutes():
-        start_time = time.time()
-        while True:
-            current_time = time.time()
-            if current_time - start_time >= 120:  # Check if two minutes have elapsed
-                # Call the alpha_beta function here
-                board.alpha_beta(board, 2, -math.inf, math.inf, True)
-                start_time = time.time()  # Reset the start time
-    """
-
-    if dummy.ai_bool and board.Anzahlmoves % 2 == 1:
-        dummy.random_move(dummy.ai_bool, board)
-
-    for event in pygame.event.get():
-        x, y = pygame.mouse.get_pos()
-        # ONLY ALLOW CLICKS INSIDE THE PLAYING AREA
-        if (board.dislocation_count_col <= x <= 512 + board.dislocation_count_col) \
-                and (board.dislocation_count_row <= y <= 512 + board.dislocation_count_row):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and len(visuals.sec) == 0:
-                event_type = 1
-                visuals.visualize(event_type, board, deneme_screen)
-                event_type = -1
-            if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
-                event_type = 0
-                # TODO: TEST IF THIS IS POSSIBLE MOVE IF NOT - NOT ALLOWED TO MOVE, RETURN BACK TO OLD POS
-                # TODO: Change the value of player_turn when one of the opponent makes the move
-                visuals.visualize(event_type, board, deneme_screen)
-                event_type = -1
-        if event.type == pygame.QUIT:
-            running = False
-    background(deneme_screen, board)
-    timer_white(deneme_screen, wtimer, board)
-    if board.Anzahlmoves % 2 == 0:  # DECREASE WHITE PLAYERS TIME WHILE PLAYING
-        wtimer.time -= 1
-    timer_black(deneme_screen, btimer, board)
-    if board.Anzahlmoves % 2 == 1:   # DECREASE BLACK PLAYERS TIME WHILE PLAYING
-        btimer.time -= 1
-    visuals.visualize(event_type, board, deneme_screen)
-    pygame.display.flip()
-    clock.tick(60)
+    dummy = bot(True, 'black')  # Welcome to life dummy
+    board.botplaying = (dummy.ai_bool, dummy.color)
+    event_type = 0
+    board.positions()
+    while running:
+        # Bot playing
+        if dummy.ai_bool and processChecker == 1:
+            if dummy.color == 'black' and board.Anzahlmoves % 2 == 1:
+                dummy.random_move(dummy.ai_bool, board)
+            elif dummy.color == 'white' and board.Anzahlmoves % 2 == 0:
+                dummy.random_move(dummy.ai_bool, board)
+        # Player playing
+        for event in pygame.event.get():
+            x, y = pygame.mouse.get_pos()
+            # ONLY ALLOW CLICKS INSIDE THE PLAYING AREA
+            if (board.dislocation_count_col <= x <= 512 + board.dislocation_count_col) \
+                    and (board.dislocation_count_row <= y <= 512 + board.dislocation_count_row):
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and len(visuals.sec) == 0:
+                    event_type = 1
+                    visuals.visualize(event_type, board, deneme_screen)
+                    event_type = -1
+                if event.type == pygame.MOUSEBUTTONUP and len(visuals.sec) == 1:
+                    event_type = 0
+                    visuals.visualize(event_type, board, deneme_screen)
+                    event_type = -1
+            if event.type == pygame.QUIT:
+                running = False
+        background(deneme_screen, board)
+        visualizeTimers(deneme_screen, wtimer, btimer, board)
+        visuals.visualize(event_type, board, deneme_screen)
+        pygame.display.flip()
+        clock.tick(60)
 
 
 
 
-pygame.quit()
+    pygame.quit()

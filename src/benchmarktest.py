@@ -8,6 +8,9 @@ from aibot import randomizer
 from tests import FENtoBoard
 
 testing = 1 # 0 for Zuggenerator , 1 for MinMax - AlphaBetaSuche
+board1 = "4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22"
+board2 = "r1b1k1nr/1pp2ppp/p1p5/2b1p3/P3P3/2N2PP1/1PPP3q/R1B1KQ2 w Qkq - 0 11"
+board3 = "8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34"
 def zug_generator_starting():
     color = 'white'
     boardd = board()
@@ -76,7 +79,7 @@ def zug_generator_end():
 def alpha_beta_depth1():
     a_b_board_1 = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (enPassentSquareRow, enPassentSquareCol), \
-    halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+    halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     a_b_board_1.board = board_d
     a_b_board_1.boardInteger = np.array(hilfsboard)
     a_b_board_1.positions()
@@ -99,7 +102,7 @@ def alpha_beta_depth2():
     a_b_board_2 = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
     enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     a_b_board_2.board = board_d
     a_b_board_2.boardInteger = np.array(hilfsboard)
     a_b_board_2.positions()
@@ -120,7 +123,7 @@ def alpha_beta_depth3():
     a_b_board_3 = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
     enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     a_b_board_3.board = board_d
     a_b_board_3.boardInteger = np.array(hilfsboard)
     a_b_board_3.positions()
@@ -142,7 +145,7 @@ def mini_max_depth1():
     min_max_board = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
     enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     min_max_board.board = board_d
     min_max_board.boardInteger = np.array(hilfsboard)
     min_max_board.positions()
@@ -163,7 +166,7 @@ def mini_max_depth2():
     min_max_board_2 = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
     enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     min_max_board_2.board = board_d
     min_max_board_2.boardInteger = np.array(hilfsboard)
     min_max_board_2.positions()
@@ -184,7 +187,7 @@ def mini_max_depth3():
     min_max_board_3 = board()
     board_d, color, kwhite, kblack, kingsideCastleWhite, queensideCastleWhite, kingsideCastleBlack, queensideCastleBlack, (
     enPassentSquareRow, enPassentSquareCol), \
-        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard("4k2r/r2n1pbp/3B2p1/p1p3P1/2p4P/7B/PP2K3/1R4NR w k - 0 22")
+        halfMoveClock, fullMoveClock, hilfsboard = FENtoBoard(board1)
     min_max_board_3.board = board_d
     min_max_board_3.boardInteger = np.array(hilfsboard)
     min_max_board_3.positions()
@@ -321,20 +324,20 @@ elif testing == 1:
     array4 = (
         timeit.repeat(stmt='alpha_beta_depth1()', setup='from __main__ import alpha_beta_depth1', repeat=5, number=1))
     array11 = (
-        timeit.repeat(stmt='mini_max_depth1()', setup='from __main__ import mini_max_depth1', repeat=10, number=1))
+        timeit.repeat(stmt='mini_max_depth1()', setup='from __main__ import mini_max_depth1', repeat=1, number=1))
     array1 = (
-        timeit.repeat(stmt='alpha_beta_depth1()', setup='from __main__ import alpha_beta_depth1', repeat=10, number=1))
+        timeit.repeat(stmt='alpha_beta_depth1()', setup='from __main__ import alpha_beta_depth1', repeat=1, number=1))
     array22 = (
-        timeit.repeat(stmt='mini_max_depth2()', setup='from __main__ import mini_max_depth2', repeat=10, number=1))
+        timeit.repeat(stmt='mini_max_depth2()', setup='from __main__ import mini_max_depth2', repeat=1, number=1))
     array2 = (
-        timeit.repeat(stmt='alpha_beta_depth2()', setup='from __main__ import alpha_beta_depth2', repeat=10, number=1))
+        timeit.repeat(stmt='alpha_beta_depth2()', setup='from __main__ import alpha_beta_depth2', repeat=1, number=1))
 
     array33 = (
-        timeit.repeat(stmt='mini_max_depth3()', setup='from __main__ import mini_max_depth3', repeat=10, number=1))
+        timeit.repeat(stmt='mini_max_depth3()', setup='from __main__ import mini_max_depth3', repeat=1, number=1))
     array3 = (
-        timeit.repeat(stmt='alpha_beta_depth3()', setup='from __main__ import alpha_beta_depth3', repeat=10, number=1))
+        timeit.repeat(stmt='alpha_beta_depth3()', setup='from __main__ import alpha_beta_depth3', repeat=1, number=1))
 
-    x = range(1, 11)
+    x = range(1, 2)
     fig, axs = plt.subplots(3, 2)
     axs[0, 0].plot(x, array11, 'tab:blue')
     axs[0, 0].set_title('MinMax with Depth: 1')

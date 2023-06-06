@@ -10,15 +10,15 @@ def randomizer(moves_list):
 
 
 class bot:
-    def __init__(self):
+    def __init__(self, ai_bool, color):
 
-        self.ai_bool = False # AI-Bot active bool
-        self.color = 'black'  # Make sure to decide the bots color beforehand
+        self.ai_bool = ai_bool # AI-Bot active bool
+        self.color = color  # Make sure to decide the bots color beforehand
 
     def random_move(self, ai_bool, board):
         if ai_bool:  # AI-Bot is active
             if not board.finished:
-                bewertung, path = alpha_beta(board, 2, float('-inf'), float('inf'), True)
+                bewertung, path = alpha_beta(board, 1, float('-inf'), float('inf'), True)
                 move = path[0].lastmove
                 print(move)
                 sq, dest = move
@@ -93,6 +93,7 @@ def copy_board(board):
     new_board.Anzahlmoves = board.Anzahlmoves
     new_board.board = [[copy.deepcopy(piece) if piece is not None else None for piece in row] for row in board.board]
     new_board.boardInteger = np.copy(board.boardInteger)
+    new_board.botplaying = board.botplaying
 
     return new_board
 

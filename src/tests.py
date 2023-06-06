@@ -468,11 +468,12 @@ class TestAlphaBeta(unittest.TestCase):
         b_board.moveZa(sq, dest)
         chessBoardVisualize(b_board.boardInteger)
         self.assertIn(move, t_board.moves)
+            """
     def test_alpha_beta_suche2(self):
         b_board = board()
         b_board.screen = ()
         # Testing
-        t_board = testingBoard("A", 1, "r2q1rk1/pp2ppbp/2np1np1/8/2PP4/2N1PN2/PPQ2PPP/R1B1K2R b KQ - 4 8", 12)
+        t_board = testingBoard("A", 2, "8/2p2R2/1p2p1Np/1P5k/3nr3/8/P7/2K5 w - - 0 34", 12)
         b_board.board = t_board.board
         b_board.boardInteger = np.array(t_board.hilfsboard)
         b_board.positions()
@@ -495,9 +496,11 @@ class TestAlphaBeta(unittest.TestCase):
         for boards in path:
             print("Move:", i)
             chessBoardVisualize(boards.boardInteger)
+            print(boards.lastmove)
             print("\n")
             i += 1
-    """
+
+
     #  Alpha Beta Testing
     def test_alpha_J_1_depth1(self):
         b_board = board()
